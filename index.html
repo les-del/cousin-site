@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cousin</title>
+    <style>
+        @font-face {
+            font-family: 'ABC Monument Grotesk Mono';
+            src: url('./fonts/ABCMonumentGroteskMono-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: white;
+            margin: 1.25em;
+        }
+
+        .logo-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25em;
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: flex-end;
+            padding: 1.2em;
+            opacity: 0;
+        }
+
+        .section.active {
+            opacity: 1;
+        }
+
+        .text-content {
+            width: 100%;
+            font-family: 'ABC Monument Grotesk Mono', monospace;
+            font-size: 1em;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .text-content p {
+            margin-bottom: 0;
+        }
+
+        .contact-section .text-content {
+            font-size: 1em;
+        }
+
+        .contact-section .text-content p:first-child {
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+
+        .contact-section .text-content p:not(:first-child) {
+            margin-bottom: 0;
+        }
+
+        .text-content a {
+            color: #000;
+            text-decoration: underline;
+            transition: opacity 0.2s ease;
+        }
+
+        .text-content a:hover {
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .text-content {
+                width: 100%;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .text-content {
+                width: 100%;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="./images/cousin_logo_HiRes.png" alt="Cousin Logo" class="logo">
+    </div>
+
+    <div class="section active" id="section1">
+        <div class="text-content">
+            <p>We're a film production company.</p>
+            <p>Our name draws from that childhood figure</p>
+            <p>that was your chosen co-conspirator.</p>
+            <p>The one you explored with, made stuff</p>
+            <p>with, tried stuff with, broke stuff with.</p>
+        </div>
+    </div>
+
+    <div class="section contact-section" id="section2">
+        <div class="text-content">
+            <p>Nick Simkins</p>
+            <p>FOUNDER & EP</p>
+            <p>&nbsp;</p>
+            <p>T: +61 415 064 495</p>
+            <p>E: <a href="mailto:nick@cousin.site">nick@cousin.site</a></p>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        const totalSections = 2;
+        let isScrolling = false;
+
+        function handleScroll(e) {
+            if (isScrolling) return;
+            
+            isScrolling = true;
+            
+            const delta = e.deltaY || e.detail || e.wheelDelta;
+            
+            if (delta > 0 && currentSection < totalSections) {
+                currentSection++;
+            } else if (delta < 0 && currentSection > 1) {
+                currentSection--;
+            }
+            
+            updateSections();
+            
+            setTimeout(() => {
+                isScrolling = false;
+            }, 200);
+        }
+
+        let startY = 0;
+        let endY = 0;
+
+        function handleTouchStart(e) {
+            startY = e.touches[0].clientY;
+        }
+
+        function handleTouchEnd(e) {
+            endY = e.changedTouches[0].clientY;
+            const diff = startY - endY;
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && currentSection < totalSections) {
+                    currentSection++;
+                } else if (diff < 0 && currentSection > 1) {
+                    currentSection--;
+                }
+                updateSections();
+            }
+        }
+
+        function updateSections() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.getElementById(`section${currentSection}`).classList.add('active');
+        }
+
+        window.addEventListener('wheel', handleScroll, { passive: false });
+        window.addEventListener('touchstart', handleTouchStart, { passive: true });
+        window.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+        window.addEventListener('wheel', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' && currentSection < totalSections) {
+                currentSection++;
+                updateSections();
+            } else if (e.key === 'ArrowUp' && currentSection > 1) {
+                currentSection--;
+                updateSections();
+            }
+        });
+    </script>
+</body>
+</html>
