@@ -136,21 +136,31 @@
             pointer-events: none;
         }
 
-        /* Force remove underline from phone number on mobile Chrome */
+        /* Prevent iPhone from auto-detecting phone numbers as links */
         .text-content p {
             text-decoration: none !important;
             -webkit-text-decoration: none !important;
             -moz-text-decoration: none !important;
             -ms-text-decoration: none !important;
             -o-text-decoration: none !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            -khtml-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            pointer-events: none !important;
         }
 
-        .text-content p:not(:has(a)) {
-            text-decoration: none !important;
-            -webkit-text-decoration: none !important;
-            -moz-text-decoration: none !important;
-            -ms-text-decoration: none !important;
-            -o-text-decoration: none !important;
+        /* Only allow email link to be clickable */
+        .text-content a {
+            pointer-events: auto !important;
+            -webkit-touch-callout: default !important;
+            -webkit-user-select: text !important;
+            -khtml-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
         }
 
         @media (max-width: 768px) {
