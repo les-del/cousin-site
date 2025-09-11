@@ -149,6 +149,12 @@
             .text-content p:last-child:after {
                 content: "";
             }
+            
+            /* Add line break after EP on mobile */
+            .contact-section .text-content p:nth-child(2):after {
+                content: "\A";
+                white-space: pre;
+            }
         }
 
         @media (max-width: 480px) {
