@@ -65,6 +65,7 @@
             font-size: 1em;
             line-height: 1;
             text-transform: uppercase;
+            letter-spacing: -0.03em;
         }
 
         .text-content p {
@@ -99,16 +100,22 @@
             opacity: 0.5;
         }
 
-        /* Prevent phone number auto-linking on mobile */
-        .text-content p {
+        /* Disable text selection and copying globally */
+        * {
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             -khtml-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
         }
 
+        /* Only allow email link to be clickable and selectable */
         .text-content a {
             -webkit-touch-callout: default;
             -webkit-user-select: text;
@@ -116,6 +123,17 @@
             -moz-user-select: text;
             -ms-user-select: text;
             user-select: text;
+            pointer-events: auto;
+        }
+
+        /* Disable image dragging */
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
         }
 
         @media (max-width: 768px) {
