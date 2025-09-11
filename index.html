@@ -136,6 +136,23 @@
             pointer-events: none;
         }
 
+        /* Force remove underline from phone number on mobile Chrome */
+        .text-content p {
+            text-decoration: none !important;
+            -webkit-text-decoration: none !important;
+            -moz-text-decoration: none !important;
+            -ms-text-decoration: none !important;
+            -o-text-decoration: none !important;
+        }
+
+        .text-content p:not(:has(a)) {
+            text-decoration: none !important;
+            -webkit-text-decoration: none !important;
+            -moz-text-decoration: none !important;
+            -ms-text-decoration: none !important;
+            -o-text-decoration: none !important;
+        }
+
         @media (max-width: 768px) {
             .text-content {
                 width: 100%;
