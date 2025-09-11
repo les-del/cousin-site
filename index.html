@@ -25,7 +25,7 @@
 
         body {
             background: white;
-            margin: 1.25em;
+            margin: 1em;
         }
 
         .logo-container {
@@ -33,7 +33,7 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 1.25em;
+            padding: 1em;
         }
 
         .logo {
@@ -50,7 +50,7 @@
             bottom: 0;
             display: flex;
             align-items: flex-end;
-            padding: 1.2em;
+            padding: 1em;
             opacity: 0;
         }
 
@@ -119,41 +119,22 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                margin: 1em;
-            }
-            
-            .logo-container {
-                top: 1em;
-                left: 1em;
-                right: 1em;
-            }
-            
-            .section {
-                padding: 1em;
-            }
-            
             .text-content {
                 width: 100%;
                 font-size: 0.9em;
             }
             
-            .text-content p {
+            /* Only make the first section flow naturally on mobile */
+            #section1 .text-content p {
                 display: inline;
             }
             
-            .text-content p:after {
+            #section1 .text-content p:after {
                 content: " ";
             }
             
-            .text-content p:last-child:after {
+            #section1 .text-content p:last-child:after {
                 content: "";
-            }
-            
-            /* Add line break after EP on mobile */
-            .contact-section .text-content p:nth-child(2):after {
-                content: "\A";
-                white-space: pre;
             }
         }
 
@@ -263,4 +244,3 @@
         });
     </script>
 </body>
-</html>
