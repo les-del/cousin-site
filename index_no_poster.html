@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="We make. Commercials. Films. Noise in a screen.">
+  <meta name="theme-color" content="#ffffff">
+  <title>Cousin - NO POSTER (Shows Black Flash)</title>
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/social/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/social/apple-touch-icon.png">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cousin.site/">
+  <meta property="og:title" content="Cousin">
+  <meta property="og:description" content="We make. Commercials. Films. Noise in a screen.">
+  <meta property="og:image" content="https://cousin.site/assets/images/social/og-image.png">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://cousin.site/">
+  <meta property="twitter:title" content="Cousin">
+  <meta property="twitter:description" content="We make. Commercials. Films. Noise in a screen.">
+  <meta property="twitter:image" content="https://cousin.site/assets/images/social/og-image.png">
+  
+  <!-- PWA Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/social/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/images/social/icon-512.png">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+      cursor: none; /* Hide native cursor for custom cursor */
+    }
+
+    /* Custom cursor with multiply blend mode */
+    .custom-cursor {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 26px;
+      height: 26px;
+      pointer-events: none;
+      z-index: 999999;
+      mix-blend-mode: multiply;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url('assets/images/C_1.png');
+      transform: translate(-50%, -50%);
+      opacity: 0; /* Hidden initially until loader finishes */
+      transition: opacity 0.3s ease;
+      will-change: transform, left, top;
+      display: block;
+    }
+    
+    .custom-cursor.visible {
+      opacity: 1;
+    }
+
+    .custom-cursor.active {
+      background-image: url('assets/images/C_2.png');
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: #ffffff;
+      color: #000000;
+      font-size: 1em;
+      line-height: 100%;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    /* UNIVERSAL 1EM MARGIN - NEVER TO BE VIOLATED */
+    margin: 0;
+    padding: 1em;
+    box-sizing: border-box;
+  }
+
+    /* Prevent any element from extending past the universal margin */
+    *:not(body):not(#site-loader):not(#site-loader *):not(.column-guides):not(.column-guide):not(.row-guide) {
+      max-width: calc(100vw - 2em) !important;
+    }
+
+    /* Loader styles */
+    #site-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #ffffff;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    #site-loader.hidden {
+      display: none;
+    }
+
+    /* Loader positioning - Desktop: spans columns 5-7 (3 columns total) */
+    .loader-container {
+      position: fixed;
+      left: calc(1em + 4 * ((100vw - 13em) / 12 + 1em)); /* Start at column 5 */
+      width: calc(2 * ((100vw - 13em) / 12 + 1em) + (100vw - 13em) / 12); /* Span columns 5-7 (3 columns) */
+      top: calc(1em + 2 * ((100vh - 7em) / 6 + 1em)); /* Start at row 3 */
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Tablet responsive loader - spans columns 3-6 (4 columns total) */
+    @media (max-width: 1279px) and (min-width: 769px) {
+      .loader-container {
+        left: calc(1em + 2 * ((100vw - 9em) / 8 + 1em)); /* Start at column 3 */
+        width: calc(3 * ((100vw - 9em) / 8 + 1em) + (100vw - 9em) / 8); /* Span columns 3-6 (4 columns) */
+      }
+    }
+
+    /* Mobile responsive loader - spans 5 columns width within mobile grid */
+    @media (max-width: 768px) {
+      .loader-container {
+        left: 1em; /* Start at left margin */
+        width: calc((100vw - 2em - 1.25em) / 6 * 5 + 4 * 0.25em); /* 5 columns + 4 gutters */
+      }
+    }
+
+    .loader-digit {
+      height: auto;
+      width: auto;
+      display: block;
+      /* PNG can use full container width (5 columns) */
+      max-width: 100%; /* Use full container width */
+      /* Add slight curve/contrast to make 5% blacker */
+      filter: brightness(0.95) contrast(1.05);
+    }
+
+    /* Make 100% loader image 25% larger on desktop only */
+    .loader-digit[src*="100.png"] {
+      max-width: 125%; /* Allow it to be 25% larger than container */
+      width: 125%; /* Explicit width to match max-width */
+      transform: scale(1.25);
+    }
+
+    /* 100% image spans full 6 columns on mobile */
+    @media (max-width: 768px) {
+      .loader-digit[src*="100.png"] {
+        position: fixed;
+        left: 1em; /* Start at left margin */
+        top: 50%; /* Center vertically */
+        transform: translateY(-50%); /* Perfect vertical centering */
+        width: calc(100vw - 2em); /* Full width minus margins (6 columns) */
+        max-width: none; /* Override container constraints */
+      }
+    }
+
+    /* Selective case mode - when 'C' key toggles to Title Case */
+    body.selective-case {
+      text-transform: none;
+    }
+
+    /* Keep nav items uppercase in selective mode */
+    body.selective-case .nav-toggle {
+      text-transform: uppercase !important;
+    }
+
+    /* Keep contact labels uppercase, values in sentence case */
+    body.selective-case .contact-label {
+      text-transform: uppercase !important;
+    }
+
+    body.selective-case .contact-value {
+      text-transform: capitalize !important;
+    }
+
+    /* Force Title Case for Ariel Martin projects in selective mode */
+    body.selective-case .project-item {
+      text-transform: capitalize !important;
+    }
+
+    .logo {
+      position: fixed;
+      top: 1em;
+      left: 1em;
+      width: calc(100vw - 2em); /* Full 12 columns within body padding */
+      height: auto;
+      padding: 0;
+      z-index: 500;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      opacity: 1;
+      transition: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+    }
+
+    /* Ariel logo specific positioning - spans columns 6-12, starts at row 2 */
+    .logo[src*="Ariel"] {
+      left: calc(1em + 5 * ((100vw - 13em) / 12 + 1em)); /* Start at column 6 */
+      top: calc(1em + (100vh - 7em) / 6 + 1em); /* Start at row 2 */
+      width: calc((100vw - 13em) / 12 * 7 + 6em); /* 7 columns + 6 gutters */
+      right: 1em; /* Respect right margin */
+      padding: 0;
+    }
+
+    /* Tablet responsive Ariel logo (8 columns) - span columns 4-8 */
+    @media (max-width: 1279px) and (min-width: 769px) {
+      .logo[src*="Ariel"] {
+        left: calc(1em + 3 * ((100vw - 9em) / 8 + 1em)); /* Start at column 4 */
+        width: calc((100vw - 9em) / 8 * 5 + 4em); /* 5 columns (4-8) + 4 gutters */
+        right: auto;
+      }
+    }
+
+    /* Mobile responsive Ariel logo (6 columns) */
+    @media (max-width: 768px) {
+      .logo[src*="Ariel"] {
+        left: 1em; /* Start at left margin */
+        width: calc(100vw - 2em); /* Full width within margins */
+        right: 1em; /* End at right margin */
+        top: calc((1em + (100vh - 7em) / 6 + 1em) * 1.2); /* 20% lower than desktop */
+      }
+    }
+
+    .logo.hidden {
+      opacity: 0;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 1em;
+      left: 1em;
+      z-index: 2000;
+    }
+
+    .nav-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-item {
+      margin-bottom: 0;
+    }
+
+    .nav-toggle {
+      margin-bottom: 0;
+    }
+
+    .nav-toggle:hover {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-sublist {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: max-height 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55), 
+                  opacity 0.3s ease-out, 
+                  margin-bottom 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                  transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .nav-sublist.open {
+      max-height: 800px;
+      opacity: 1;
+      margin-bottom: 0;
+      transform: translateY(0);
+    }
+
+    /* Add spacing only to Directors sublist */
+    #directors-content.open {
+      margin-bottom: 1em;
+    }
+
+    /* Add spacing to About sublist as well */
+    #about-content.open {
+      margin-bottom: 1em;
+    }
+
+    .nav-sublist li {
+      padding-left: 1em;
+      margin-bottom: 0;
+      opacity: 0;
+      transform: translateY(-5px);
+      transition: opacity 0.2s ease-out 0.1s, transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s;
+    }
+
+    .nav-sublist.open li {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nav-sublist .nav-sublist li {
+      padding-left: 1em;
+      transition-delay: 0.2s;
+    }
+
+    /* Bio content should match the same indentation as Ariel projects (1em) */
+    .bio-item .nav-sublist li {
+      padding-left: 1em;
+    }
+
+    .nav-sublist .nav-sublist li:nth-child(2) {
+      transition-delay: 0.25s;
+    }
+
+    .nav-sublist .nav-sublist li:nth-child(3) {
+      transition-delay: 0.3s;
+    }
+
+    .nav-sublist .nav-sublist li:nth-child(4) {
+      transition-delay: 0.35s;
+    }
+
+    /* Reset list items when closing */
+    .nav-sublist:not(.open) li {
+      opacity: 0;
+      transform: translateY(-5px);
+      transition-delay: 0s;
+    }
+
+    /* Contact links styling */
+    .nav-sublist li a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-sublist li a:hover {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Project items */
+    .project-item {
+      margin-bottom: 0;
+    }
+
+    .project-item:hover {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+
+    /* Loading state for project items */
+    .project-item.loading {
+      pointer-events: none; /* Disable all mouse interactions during loading */
+    }
+
+    /* Loading cursor for the entire body when projects are loading */
+    body.loading {
+      /* Custom cursor handles this */
+    }
+
+    /* Ensure all interactive elements show loading cursor during loading */
+    body.loading * {
+      /* Custom cursor handles this */
+    }
+
+    /* Video Player */
+    .director-portfolio-lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: transparent;
+      flex-direction: column;
+      z-index: 1700;
+    }
+
+    .director-portfolio-lightbox[data-active="1"] {
+      display: flex;
+    }
+
+    .director-portfolio-lightbox-media {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 1em;
+    }
+
+    .director-portfolio-lightbox-media-video-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .director-portfolio-lightbox-media-video {
+      max-width: calc((100vw - 13em) / 12 * 8 + 7em); /* 8 columns + 7 gutters - Desktop/Laptop */
+      max-height: calc(100vh - 2em);
+      width: calc((100vw - 13em) / 12 * 8 + 7em); /* Explicit width to match max-width */
+      height: auto;
+      object-fit: contain;
+      display: block;
+      vertical-align: top;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+    }
+
+    /* Tablet video sizing - 8 columns on tablet grid */
+    @media (max-width: 1279px) and (min-width: 769px) {
+      .director-portfolio-lightbox-media-video {
+        max-width: calc((100vw - 9em) / 8 * 8 + 7em); /* All 8 columns on tablet */
+        width: calc((100vw - 9em) / 8 * 8 + 7em); /* Explicit width to match max-width */
+      }
+    }
+
+    /* Vertical breakpoint - constrain video to 6 columns on short screens */
+    @media (max-height: 900px) {
+      .director-portfolio-lightbox-media-video {
+        max-width: calc((100vw - 13em) / 12 * 6 + 5em); /* 6 columns + 5 gutters */
+        width: calc((100vw - 13em) / 12 * 6 + 5em); /* 6 columns + 5 gutters */
+      }
+    }
+
+    /* Mobile responsive video sizing */
+    @media (max-width: 768px) {
+      .director-portfolio-lightbox-media-video {
+        max-width: calc(100vw - 2em);
+        width: calc(100vw - 2em);
+        max-height: calc(100vh - 2em);
+      }
+    }
+
+    .director-portfolio-lightbox-media-playbar {
+      width: 100%;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      margin-top: 0;
+      opacity: 0;
+      transition: opacity 0.1s ease;
+    }
+
+    .director-portfolio-lightbox-media-playbar.show {
+      opacity: 1;
+    }
+
+    .director-portfolio-lightbox-media-playbar-meter {
+      width: 100%;
+      height: 100%;
+    }
+
+    .director-portfolio-lightbox-media-playbar-meter-progress {
+      width: 0%;
+      height: 100%;
+      background: #000;
+    }
+
+    .director-portfolio-lightbox-video-controls {
+      margin-top: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      opacity: 0;
+      transition: opacity 0.1s ease;
+    }
+
+    .director-portfolio-lightbox-video-controls.show {
+      opacity: 1;
+    }
+
+    .director-portfolio-lightbox-video-controls-left {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+    }
+
+    .director-portfolio-lightbox-video-controls-right {
+      color: #000;
+      font-family: 'Space Mono', monospace;
+      font-size: 1em;
+      line-height: 100%;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .director-portfolio-lightbox-controls-play,
+    .director-portfolio-lightbox-controls-pause {
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      transition: opacity 0.1s ease;
+    }
+
+    .director-portfolio-lightbox-controls-play:hover,
+    .director-portfolio-lightbox-controls-pause:hover {
+      opacity: 0.5;
+    }
+
+    .director-portfolio-lightbox-controls-play[data-active="0"],
+    .director-portfolio-lightbox-controls-pause[data-active="0"] {
+      display: none;
+    }
+
+    .director-portfolio-lightbox-controls-play svg,
+    .director-portfolio-lightbox-controls-pause svg {
+      fill: #000;
+      stroke: #000;
+    }
+
+    .director-portfolio-lightbox-controls-time {
+      color: #000;
+      font-family: 'Space Mono', monospace;
+      font-size: 1em;
+      line-height: 100%;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    /* Video hover overlay */
+    .video-hover-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: transparent;
+      display: none;
+      flex-direction: column;
+      z-index: 400;
+      pointer-events: none;
+    }
+
+    .video-hover-overlay[data-active="1"] {
+      display: flex;
+    }
+
+    .video-hover-overlay-media {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 1em;
+    }
+
+    .video-hover-overlay-media-video-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .video-hover-overlay-media-video {
+      max-width: calc((100vw - 13em) / 12 * 8 + 7em); /* 8 columns + 7 gutters - Desktop/Laptop */
+      max-height: calc(100vh - 2em);
+      width: calc((100vw - 13em) / 12 * 8 + 7em); /* Match max-width for images */
+      height: auto;
+      object-fit: contain;
+      display: block;
+      vertical-align: top;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      transition: none !important;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+    }
+
+    /* Tablet hover overlay video sizing - 8 columns on tablet grid */
+    @media (max-width: 1279px) and (min-width: 769px) {
+      .video-hover-overlay-media-video {
+        max-width: calc((100vw - 9em) / 8 * 8 + 7em); /* All 8 columns on tablet */
+        width: calc((100vw - 9em) / 8 * 8 + 7em); /* Match max-width for images */
+      }
+    }
+
+    /* Vertical breakpoint - constrain hover video to 6 columns on short screens */
+    @media (max-height: 900px) {
+      .video-hover-overlay-media-video {
+        max-width: calc((100vw - 13em) / 12 * 6 + 5em); /* 6 columns + 5 gutters */
+        width: calc((100vw - 13em) / 12 * 6 + 5em); /* 6 columns + 5 gutters */
+      }
+    }
+
+    /* Mobile responsive hover overlay video sizing */
+    @media (max-width: 768px) {
+      .video-hover-overlay-media-video {
+        max-width: calc(100vw - 2em);
+        width: calc(100vw - 2em);
+        max-height: calc(100vh - 2em);
+      }
+    }
+
+    /* Contact image overlay */
+    .contact-image-overlay {
+      position: fixed;
+      /* Span columns 2-3: start at column 2, span 2 columns */
+      left: calc(1em + 1 * ((100vw - 13em) / 12 + 1em)); /* Start at column 2 */
+      width: calc((100vw - 13em) / 12 * 2 + 1em); /* 2 columns + 1 gutter */
+      /* Start at row 3 */
+      top: calc(1em + 2 * ((100vh - 7em) / 6 + 1em)); /* Start at row 3 (0-indexed, so row 3 = index 2) */
+      background: transparent;
+      display: none;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .contact-image-overlay.show {
+      display: block;
+    }
+
+    .contact-image-overlay img {
+      width: 100%;
+      height: auto;
+      opacity: 1;
+      transition: none;
+    }
+
+
+    /* Mobile responsive contact image */
+    @media (max-width: 768px) {
+      .contact-image-overlay {
+        /* On mobile, use simpler positioning */
+        left: 1em;
+        width: calc((100vw - 2em) / 3); /* Roughly 2 columns on mobile 6-col grid */
+        top: calc(1em + 2 * ((100vh - 7em) / 6 + 1em)); /* Still row 3 */
+      }
+    }
+
+
+    /* Bio content styling */
+    #bio-content {
+      pointer-events: none; /* Disable all hover/interaction on entire bio content */
+      padding-left: 1em; /* Same indentation as other nav-sublist items */
+    }
+
+    /* Hide all other project items when bio is open */
+    #bio-content.open ~ .project-item:not(.bio-item) {
+      display: none;
+    }
+    
+    #bio-content li p {
+      margin: 0;
+      padding: 0;
+      max-width: calc((100vw - 13em) / 12 * 6 + 5em); /* 6 columns + 5 gutters - Desktop */
+      word-wrap: break-word;
+    }
+
+    /* Tablet responsive bio text - 8 columns */
+    @media (max-width: 1279px) and (min-width: 769px) {
+      #bio-content li p {
+        max-width: calc((100vw - 9em) / 8 * 6 + 5em); /* 6 columns + 5 gutters - Tablet */
+      }
+    }
+
+    /* Mobile responsive bio text - all columns */
+    @media (max-width: 768px) {
+      #bio-content li p {
+        max-width: calc((100vw - 2em - 1.25em) / 6 * 4 + 3em); /* 4 columns + 3 gutters - Mobile */
+      }
+    }
+
+    /* Prevent dragging for all images and videos */
+    img, video {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+    }
+
+    /* Temporary column guides - 12 columns with 1em gutters */
+    .column-guides {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99999;
+      display: block; /* Show guides by default */
+    }
+
+    .column-guides.hidden {
+      display: none;
+    }
+
+    .column-guide {
+      position: absolute;
+      top: 0;
+      height: 100vh;
+      background: rgba(255, 0, 0, 0.1);
+      border-left: 1px solid rgba(255, 0, 0, 0.3);
+      border-right: 1px solid rgba(255, 0, 0, 0.3);
+    }
+
+    /* Row guides - 6 rows with 1em gutters */
+    .row-guide {
+      position: absolute;
+      left: 0;
+      width: 100vw;
+      background: transparent;
+      border-top: 1px solid rgba(0, 150, 255, 1);
+      border-bottom: 1px solid rgba(0, 150, 255, 1);
+    }
+
+    /* 12 columns with 1em gutters - Desktop/Laptop (1280px+) */
+    .column-guide:nth-child(1) { left: 1em; width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(2) { left: calc(1em + (100vw - 13em) / 12 + 1em); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(3) { left: calc(1em + 2 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(4) { left: calc(1em + 3 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(5) { left: calc(1em + 4 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(6) { left: calc(1em + 5 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(7) { left: calc(1em + 6 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(8) { left: calc(1em + 7 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(9) { left: calc(1em + 8 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(10) { left: calc(1em + 9 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(11) { left: calc(1em + 10 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+    .column-guide:nth-child(12) { left: calc(1em + 11 * ((100vw - 13em) / 12 + 1em)); width: calc((100vw - 13em) / 12); }
+
+    /* 8 columns with 1em gutters - Tablet (768px - 1279px) */
+    @media (max-width: 1279px) {
+      .column-guide:nth-child(1) { left: 1em; width: calc((100vw - 9em) / 8); }
+      .column-guide:nth-child(2) { left: calc(1em + (100vw - 9em) / 8 + 1em); width: calc((100vw - 9em) / 8); }
+      .column-guide:nth-child(3) { left: calc(1em + 2 * ((100vw - 9em) / 8 + 1em)); width: calc((100vw - 9em) / 8); }
+      .column-guide:nth-child(4) { left: calc(1em + 3 * ((100vw - 9em) / 8 + 1em)); width: calc((100vw - 9em) / 8); }
+      .column-guide:nth-child(5) { left: calc(1em + 4 * ((100vw - 9em) / 8 + 1em)); width: calc((100vw - 9em) / 8); }
+      .column-guide:nth-child(6) { left: calc(1em + 5 * ((100vw - 9em) / 8 + 1em)); width: calc((100vw - 9em) / 8); }
+      .column-guide:nth-child(7) { left: calc(1em + 6 * ((100vw - 9em) / 8 + 1em)); width: calc((100vw - 9em) / 8); }
+      .column-guide:nth-child(8) { left: calc(1em + 7 * ((100vw - 9em) / 8 + 1em)); width: calc((100vw - 9em) / 8); }
+      .column-guide:nth-child(9), .column-guide:nth-child(10), .column-guide:nth-child(11), .column-guide:nth-child(12) { display: none; }
+    }
+
+    /* 6 rows with 1em gutters - Desktop/Tablet */
+    .row-guide:nth-child(13) { top: 1em; height: calc((100vh - 7em) / 6); }
+    .row-guide:nth-child(14) { top: calc(1em + (100vh - 7em) / 6 + 1em); height: calc((100vh - 7em) / 6); }
+    .row-guide:nth-child(15) { top: calc(1em + 2 * ((100vh - 7em) / 6 + 1em)); height: calc((100vh - 7em) / 6); }
+    .row-guide:nth-child(16) { top: calc(1em + 3 * ((100vh - 7em) / 6 + 1em)); height: calc((100vh - 7em) / 6); }
+    .row-guide:nth-child(17) { top: calc(1em + 4 * ((100vh - 7em) / 6 + 1em)); height: calc((100vh - 7em) / 6); }
+    .row-guide:nth-child(18) { top: calc(1em + 5 * ((100vh - 7em) / 6 + 1em)); height: calc((100vh - 7em) / 6); }
+
+    /* 6 columns with thinner gutters - Mobile (480px and below) */
+    @media (max-width: 480px) {
+      .column-guide:nth-child(1) { left: 1em; width: calc((100vw - 2em - 1.25em) / 6); }
+      .column-guide:nth-child(2) { left: calc(1em + (100vw - 2em - 1.25em) / 6 + 0.25em); width: calc((100vw - 2em - 1.25em) / 6); }
+      .column-guide:nth-child(3) { left: calc(1em + 2 * ((100vw - 2em - 1.25em) / 6 + 0.25em)); width: calc((100vw - 2em - 1.25em) / 6); }
+      .column-guide:nth-child(4) { left: calc(1em + 3 * ((100vw - 2em - 1.25em) / 6 + 0.25em)); width: calc((100vw - 2em - 1.25em) / 6); }
+      .column-guide:nth-child(5) { left: calc(1em + 4 * ((100vw - 2em - 1.25em) / 6 + 0.25em)); width: calc((100vw - 2em - 1.25em) / 6); }
+      .column-guide:nth-child(6) { left: calc(1em + 5 * ((100vw - 2em - 1.25em) / 6 + 0.25em)); width: calc((100vw - 2em - 1.25em) / 6); }
+      .column-guide:nth-child(7), .column-guide:nth-child(8), .column-guide:nth-child(9), .column-guide:nth-child(10), .column-guide:nth-child(11), .column-guide:nth-child(12) { display: none; }
+      
+      /* 6 rows with thinner gutters - Mobile */
+      .row-guide:nth-child(13) { top: 1em; height: calc((100vh - 2em - 1.25em) / 6); }
+      .row-guide:nth-child(14) { top: calc(1em + (100vh - 2em - 1.25em) / 6 + 0.25em); height: calc((100vh - 2em - 1.25em) / 6); }
+      .row-guide:nth-child(15) { top: calc(1em + 2 * ((100vh - 2em - 1.25em) / 6 + 0.25em)); height: calc((100vh - 2em - 1.25em) / 6); }
+      .row-guide:nth-child(16) { top: calc(1em + 3 * ((100vh - 2em - 1.25em) / 6 + 0.25em)); height: calc((100vh - 2em - 1.25em) / 6); }
+      .row-guide:nth-child(17) { top: calc(1em + 4 * ((100vh - 2em - 1.25em) / 6 + 0.25em)); height: calc((100vh - 2em - 1.25em) / 6); }
+      .row-guide:nth-child(18) { top: calc(1em + 5 * ((100vh - 2em - 1.25em) / 6 + 0.25em)); height: calc((100vh - 2em - 1.25em) / 6); }
+    }
+  </style>
+  
+  <!-- Preload all loader images -->
+  <link rel="preload" href="assets/loader/alt_2/0.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/6.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/13.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/20.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/27.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/35.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/42.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/49.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/56.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/63.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/71.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/78.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/85.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/93.png" as="image">
+  <link rel="preload" href="assets/loader/alt_2/100.png" as="image">
+</head>
+<body>
+  <!-- Site Loader -->
+  <div id="site-loader">
+    <div class="loader-container" id="loader">
+      <!-- Loader images will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <!-- Custom cursor element -->
+  <div class="custom-cursor"></div>
+
+  <img src="assets/images/logos/cousin_logo_HiRes_2.png" alt="COUSIN" class="logo" loading="lazy">
+
+  <!-- Temporary column guides - 12 columns with 1em gutters -->
+  <div class="column-guides hidden" id="column-guides">
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="column-guide"></div>
+    <div class="row-guide"></div>
+    <div class="row-guide"></div>
+    <div class="row-guide"></div>
+    <div class="row-guide"></div>
+    <div class="row-guide"></div>
+    <div class="row-guide"></div>
+  </div>
+
+  <nav class="nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <div id="about-toggle" class="nav-toggle">About</div>
+        <ul id="about-content" class="nav-sublist">
+          <li>THAT PERSON YOU RAN WITH.</li>
+          <li>THE ONE YOU TRUSTED.THE ONE YOU BUILT</li>
+          <li>STUFF WITH. WRECKED STUFF WITH.</li>
+          <li>THE ONE WHO LIT THE FUSE AND SAID RUN.</li>
+        </ul>
+      </li>
+      
+      <li class="nav-item">
+        <div id="directors-toggle" class="nav-toggle">Directors</div>
+        <ul id="directors-content" class="nav-sublist">
+          <li>
+            <div id="ariel-toggle" class="nav-toggle">Ariel martin</div>
+            <ul id="ariel-projects" class="nav-sublist">
+              <!-- Projects will be loaded dynamically from CSV -->
+            </ul>
+          </li>
+        </ul>
+      </li>
+      
+      <li class="nav-item">
+        <div id="contact-toggle" class="nav-toggle">Contact</div>
+        <ul id="contact-content" class="nav-sublist">
+          <li><span class="contact-label">EP & FOUNDER:</span> <span class="contact-value">Nick Simkins</span></li>
+          <li><span class="contact-label">PHONE:</span> <a href="tel:+61415064495" class="contact-value">+61 415 064 495</a></li>
+          <li><span class="contact-label">EMAIL:</span> <a href="mailto:nick@cousin.site" class="contact-value">nick@cousin.site</a></li>
+          <li><span class="contact-label">HISTORY:</span> <a href="https://nicksimkins.co" target="_blank" class="contact-value">nicksimkins.co</a></li>
+          <li><br></li>
+          <li><span class="contact-label">INSTA:</span> <a href="https://www.instagram.com/cousin_presents/" target="_blank" class="contact-value">@Cousin_presents</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Contact image overlay -->
+  <div class="contact-image-overlay" id="contact-image-overlay">
+    <img src="assets/images/contact/hi.png" alt="Hi">
+  </div>
+
+
+  <!-- Image hover overlay - shows only image -->
+  <div class="video-hover-overlay" data-active="0">
+    <div class="video-hover-overlay-media">
+      <div class="video-hover-overlay-media-video-container">
+        <img class="video-hover-overlay-media-video" src="" alt="">
+      </div>
+    </div>
+  </div>
+
+  <div class="director-portfolio-lightbox" data-active="0">
+    <div class="director-portfolio-lightbox-media">
+      <div class="director-portfolio-lightbox-media-video-container">
+        <video playsinline preload="metadata" class="director-portfolio-lightbox-media-video" onclick="toggleVideo();">
+          <source>
+        </video>
+        <div class="director-portfolio-lightbox-media-playbar" onmousedown="setProgress(event);" ontouchstart="setProgress(event);">
+          <div class="director-portfolio-lightbox-media-playbar-meter">
+            <div class="director-portfolio-lightbox-media-playbar-meter-progress"></div>
+          </div>
+        </div>
+        <div class="director-portfolio-lightbox-video-controls">
+          <div class="director-portfolio-lightbox-video-controls-left">
+            <div class="director-portfolio-lightbox-controls-play" data-active="1" onclick="playVideo();">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M15.75 9L2.25 15.75L2.25 2.25L15.75 9Z"/></svg>
+            </div>
+            <div class="director-portfolio-lightbox-controls-pause" data-active="0" onclick="pauseVideo();">
+              <svg width="18" height="18" viewBox="0 0 18 18"><rect x="3" y="3" width="4.5" height="12" fill="currentColor"/><rect x="10.5" y="3" width="4.5" height="12" fill="currentColor"/></svg>
+            </div>
+            <div class="director-portfolio-lightbox-controls-time">
+              <span class="director-portfolio-lightbox-controls-time-current">00:00</span> – <span class="director-portfolio-lightbox-controls-time-total">00:00</span>
+            </div>
+          </div>
+          <div class="director-portfolio-lightbox-video-controls-right" onclick="toggleFullscreen();">
+            FULL SCREEN
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // SITE LOADER
+    // ==========================================
+    (function() {
+      const siteLoaderOverlay = document.getElementById('site-loader');
+      
+      // Check if user has visited before
+      const hasVisited = localStorage.getItem('cousinSiteVisited');
+      const speedMultiplier = hasVisited ? 0.5 : 1; // Half speed if returning visitor
+      
+      if (hasVisited) {
+        console.log('Returning visitor - loader at half speed');
+      } else {
+        console.log('First-time visitor - loader at full speed');
+      }
+      
+      let currentPercentage = 0;
+      const targetPercentage = 100;
+      const loaderElement = document.getElementById('loader');
+
+      function displayPercentage(percentage) {
+        loaderElement.innerHTML = '';
+        
+        // Use pre-created complete states from alt_2 folder with fallback
+        const img = document.createElement('img');
+        
+        // Check if the specific percentage PNG exists, otherwise use fallback
+        const alt2Path = `assets/loader/alt_2/${percentage}.png`;
+        const fallbackPath = `assets/loader/alt_2/0.png`; // Fallback to 0.png if missing
+        
+        img.src = alt2Path;
+        img.alt = percentage + '%';
+        img.className = 'loader-digit';
+        
+        // Add error handling for missing images
+        img.onerror = function() {
+          console.log(`Missing PNG for ${percentage}%, using fallback`);
+          this.src = fallbackPath;
+        };
+        
+        // No manual sizing - use the pre-set sizes from the PNGs
+        loaderElement.appendChild(img);
+
+        // No positioning needed - CSS handles everything using column guides
+      }
+
+      // Available percentages with PNGs in alt_2 folder
+      const availablePercentages = [0, 6, 13, 20, 27, 35, 42, 49, 56, 63, 71, 78, 85, 93, 100];
+      let currentIndex = 0;
+      
+      function animateLoader() {
+        if (currentIndex < availablePercentages.length) {
+          currentPercentage = availablePercentages[currentIndex];
+          displayPercentage(currentPercentage);
+          currentIndex++;
+          
+          if (currentPercentage >= targetPercentage) {
+            currentPercentage = targetPercentage;
+            displayPercentage(currentPercentage);
+            console.log('Loading complete - showing site');
+            
+            // Wait before revealing site (shorter for returning visitors)
+            const finalDelay = hasVisited ? 400 : 800;
+            setTimeout(() => {
+              siteLoaderOverlay.classList.add('hidden');
+              // Mark that user has visited
+              localStorage.setItem('cousinSiteVisited', 'true');
+              
+              // Show custom cursor after loader finishes
+              const customCursor = document.querySelector('.custom-cursor');
+              if (customCursor) {
+                customCursor.classList.add('visible');
+              }
+            }, finalDelay);
+            
+            return;
+          }
+          
+          // Randomize delay - very fast between 28-98%
+          let minDelay, maxDelay;
+          
+          if (currentPercentage < 20) {
+            minDelay = 300;
+            maxDelay = 700;
+          } else if (currentPercentage >= 28 && currentPercentage < 98) {
+            minDelay = 50;
+            maxDelay = 150;
+          } else {
+            minDelay = 100;
+            maxDelay = 300;
+          }
+          
+          // Apply speed multiplier for returning visitors (half the time)
+          const delay = Math.floor((Math.random() * (maxDelay - minDelay + 1)) + minDelay) * speedMultiplier;
+          setTimeout(animateLoader, delay);
+        }
+      }
+
+      // Preload all images first to prevent flashing
+      const imagesToPreload = availablePercentages.map(p => `assets/loader/alt_2/${p}.png`);
+      let loadedCount = 0;
+      
+      function startWhenReady() {
+        const initialDelay = hasVisited ? 250 : 500;
+        setTimeout(animateLoader, initialDelay);
+      }
+      
+      // Preload images
+      imagesToPreload.forEach(src => {
+        const img = new Image();
+        img.onload = img.onerror = () => {
+          loadedCount++;
+          if (loadedCount === imagesToPreload.length) {
+            startWhenReady();
+          }
+        };
+        img.src = src;
+      });
+    })();
+
+    // ==========================================
+    // CUSTOM CURSOR WITH MULTIPLY BLEND MODE
+    // ==========================================
+    
+    (function() {
+      const customCursor = document.querySelector('.custom-cursor');
+      
+      if (!customCursor) {
+        console.error('Custom cursor element not found in DOM!');
+        return;
+      }
+      
+      console.log('Custom cursor initialized');
+      
+      // Update cursor position on mouse move
+      document.addEventListener('mousemove', function(e) {
+        customCursor.style.left = e.clientX + 'px';
+        customCursor.style.top = e.clientY + 'px';
+      });
+      
+      // Selector for all interactive/clickable elements
+      const interactiveSelectors = '.nav-toggle, .project-item, a, .director-portfolio-lightbox-media-playbar, .director-portfolio-lightbox-controls-play, .director-portfolio-lightbox-controls-pause, .director-portfolio-lightbox-video-controls-right';
+      
+      // Add active class when hovering over interactive elements
+      document.addEventListener('mouseover', function(e) {
+        if (e.target.matches(interactiveSelectors) || e.target.closest(interactiveSelectors)) {
+          customCursor.classList.add('active');
+        }
+      });
+      
+      // Remove active class when leaving interactive elements
+      document.addEventListener('mouseout', function(e) {
+        if (e.target.matches(interactiveSelectors) || e.target.closest(interactiveSelectors)) {
+          customCursor.classList.remove('active');
+        }
+      });
+      
+      // Hide cursor when leaving window
+      document.addEventListener('mouseleave', function() {
+        customCursor.classList.remove('visible');
+      });
+      
+      // Show cursor when entering window (only if loader is done)
+      document.addEventListener('mouseenter', function() {
+        if (!document.getElementById('site-loader').classList.contains('hidden')) {
+          return; // Don't show cursor if loader is still visible
+        }
+        customCursor.classList.add('visible');
+      });
+    })();
+
+    // ==========================================
+    // MAIN SITE FUNCTIONALITY
+    // ==========================================
+    
+    // Disable/Enable hover effects for child directors
+    function disableHoverEffects() {
+      const arielToggle = document.getElementById('ariel-toggle');
+      
+      if (arielToggle) {
+        arielToggle.style.pointerEvents = 'none';
+      }
+      
+      console.log('Hover effects disabled');
+    }
+    
+    function enableHoverEffects() {
+      const arielToggle = document.getElementById('ariel-toggle');
+      
+      if (arielToggle) {
+        arielToggle.style.pointerEvents = 'auto';
+      }
+      
+      console.log('Hover effects enabled');
+    }
+    
+    // Navigation functionality
+    document.getElementById('about-toggle').addEventListener('click', function(e) {
+      const content = document.getElementById('about-content');
+      const directorsContent = document.getElementById('directors-content');
+      const contactContent = document.getElementById('contact-content');
+      const arielContent = document.getElementById('ariel-projects');
+      const contactImageOverlay = document.getElementById('contact-image-overlay');
+      
+      // ALWAYS close video first before closing any sections
+      console.log('About clicked - closing video');
+      closeVideoAndReset();
+      
+      // Close other main sections AND their sub-sections
+      directorsContent.classList.remove('open');
+      contactContent.classList.remove('open');
+      arielContent.classList.remove('open'); // Also close Ariel Martin
+      
+      // Close bio content if it's open
+      const bioContent = document.getElementById('bio-content');
+      if (bioContent && bioContent.classList.contains('open')) {
+        bioContent.classList.remove('open');
+      }
+      
+      // Hide contact image when opening other sections
+      contactImageOverlay.classList.remove('show');
+      
+      // Toggle current section
+      content.classList.toggle('open');
+      
+      // Update logo AFTER everything else is done to prevent glitches
+      setTimeout(updateLogo, 10);
+    });
+
+    // Global logo management function
+    function updateLogo() {
+      const logo = document.querySelector('.logo');
+      const arielContent = document.getElementById('ariel-projects');
+      const contactContent = document.getElementById('contact-content');
+      const isMobile = window.innerWidth <= 768;
+      
+      if (contactContent.classList.contains('open')) {
+        // Hide Cousin logo when contact section is open (hi.png is showing)
+        logo.classList.add('hidden');
+      } else if (arielContent.classList.contains('open')) {
+        // Only show Ariel PNG when Ariel Martin section is specifically open
+        logo.src = 'directors/ariel_martin/Ariel.png';
+        logo.classList.remove('hidden');
+      } else {
+        // Show Cousin logo in ALL other scenarios
+        if (isMobile) {
+          logo.src = 'assets/images/logos/CousinMed.png';
+        } else {
+          logo.src = 'assets/images/logos/cousin_logo_HiRes_2.png';
+        }
+        logo.classList.remove('hidden');
+      }
+    }
+
+    // Global function to close video and reset everything
+    function closeVideoAndReset() {
+      closeVideoPlayer();
+      hideVideoHoverOverlay();
+    }
+
+    // Flag to prevent hover effects until cursor leaves project area
+    let hoverDelayActive = false;
+
+    document.getElementById('directors-toggle').addEventListener('click', function(e) {
+      const content = document.getElementById('directors-content');
+      const aboutContent = document.getElementById('about-content');
+      const contactContent = document.getElementById('contact-content');
+      const arielContent = document.getElementById('ariel-projects');
+      const contactImageOverlay = document.getElementById('contact-image-overlay');
+      
+      // ALWAYS close video first before closing any sections
+      closeVideoAndReset();
+      
+      // Close other main sections
+      aboutContent.classList.remove('open');
+      contactContent.classList.remove('open');
+      
+      // Close bio content if it's open
+      const bioContent = document.getElementById('bio-content');
+      if (bioContent && bioContent.classList.contains('open')) {
+        bioContent.classList.remove('open');
+      }
+      
+      // Hide contact image when opening other sections
+      contactImageOverlay.classList.remove('show');
+      
+      // Toggle current section
+      content.classList.toggle('open');
+      
+      // If opening directors, disable child director interactions for 0.5 second
+      if (content.classList.contains('open')) {
+        hoverDelayActive = true;
+        disableHoverEffects();
+        console.log('Directors expanding - child directors disabled for 0.5 second');
+        setTimeout(() => {
+          hoverDelayActive = false;
+          enableHoverEffects();
+          console.log('Child directors now interactive');
+        }, 500); // Wait 0.5 second before allowing interaction
+      }
+      
+      // If directors section is being closed, also close sub-sections
+      if (!content.classList.contains('open')) {
+        arielContent.classList.remove('open');
+      }
+      
+      // Update logo AFTER everything else is done to prevent glitches
+      setTimeout(updateLogo, 10);
+    });
+
+    document.getElementById('ariel-toggle').addEventListener('click', function(e) {
+      const content = document.getElementById('ariel-projects');
+      
+      // If Ariel is currently open and we're about to close it, close any playing video
+      if (content.classList.contains('open')) {
+        closeVideoAndReset(); // Close video before collapsing
+        console.log('Ariel collapsing - closing video');
+      }
+      
+      // Toggle current section
+      content.classList.toggle('open');
+      
+      // Update logo based on ariel section state
+      updateLogo();
+      
+      if (content.classList.contains('open')) {
+        // Disable hover effects for 0.5 second after expanding
+        disableHoverEffects();
+        setTimeout(() => {
+          enableHoverEffects();
+        }, 500);
+      }
+    });
+
+    // Add hover effects for Ariel toggle
+    document.getElementById('ariel-toggle').addEventListener('mouseenter', function(e) {
+      const logo = document.querySelector('.logo');
+      const isMobile = window.innerWidth <= 768;
+      
+      // Only show Ariel logo on hover if directors section is open but ariel projects is not open
+      const directorsContent = document.getElementById('directors-content');
+      const arielContent = document.getElementById('ariel-projects');
+      
+      if (directorsContent.classList.contains('open') && !arielContent.classList.contains('open')) {
+        logo.src = 'directors/ariel_martin/Ariel.png';
+        logo.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('ariel-toggle').addEventListener('mouseleave', function(e) {
+      // Only reset logo if ariel projects section is not open
+      const arielContent = document.getElementById('ariel-projects');
+      if (!arielContent.classList.contains('open')) {
+        updateLogo();
+      }
+    });
+
+    document.getElementById('contact-toggle').addEventListener('click', function(e) {
+      const content = document.getElementById('contact-content');
+      const aboutContent = document.getElementById('about-content');
+      const directorsContent = document.getElementById('directors-content');
+      const arielContent = document.getElementById('ariel-projects');
+      const contactImageOverlay = document.getElementById('contact-image-overlay');
+      
+      // ALWAYS close video first before closing any sections
+      closeVideoAndReset();
+      
+      // Close other main sections AND their sub-sections
+      aboutContent.classList.remove('open');
+      directorsContent.classList.remove('open');
+      arielContent.classList.remove('open'); // Also close Ariel Martin
+      
+      // Close bio content if it's open
+      const bioContent = document.getElementById('bio-content');
+      if (bioContent && bioContent.classList.contains('open')) {
+        bioContent.classList.remove('open');
+      }
+      
+      // Toggle current section
+      content.classList.toggle('open');
+      
+      // Show/hide contact image based on contact section state
+      if (content.classList.contains('open')) {
+        contactImageOverlay.classList.add('show');
+      } else {
+        contactImageOverlay.classList.remove('show');
+      }
+      
+      // Update logo visibility AFTER everything else is done to prevent glitches
+      setTimeout(updateLogo, 10);
+    });
+
+
+    // Load CSV data and create project elements
+    Papa.parse('data/ArielMartin.csv', {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const container = document.getElementById('ariel-projects');
+        
+        // Filter out empty rows
+        const validData = results.data.filter(item => item.Client && item.Title);
+
+        validData.forEach(function(row, index) {
+          const projectElement = document.createElement('li');
+          projectElement.className = 'project-item';
+          projectElement.textContent = `${row.Client} '${row.Title}'`;
+          projectElement.dataset.thumbnail = row.Thumbnail;
+          projectElement.dataset.video = row.Video;
+          projectElement.dataset.index = index;
+          
+          // Add hover events
+          projectElement.addEventListener('mouseenter', function(e) {
+            e.stopPropagation();
+            
+            // Close bio content if it's open when hovering over any video project
+            const bioContent = document.getElementById('bio-content');
+            if (bioContent && bioContent.classList.contains('open')) {
+              bioContent.classList.remove('open');
+            }
+            
+            // Ignore hover OVERLAY if delay is active (right after opening directors or clicking a video)
+            // But still allow other interactions
+            if (hoverDelayActive) {
+              return;
+            }
+            
+            const player = document.querySelector('.director-portfolio-lightbox');
+            const videoSrc = row.Video;
+            
+            if (videoSrc) {
+              // Preload the video metadata for faster playback
+              preloadVideo(videoSrc);
+              
+              if (player.getAttribute('data-active') === '1') {
+                // Video player is open - show temporary hover overlay
+                showVideoHoverOverlay(videoSrc);
+              } else {
+                // Video player is closed - show normal hover overlay
+                showVideoHoverOverlay(videoSrc);
+              }
+            }
+          });
+
+          projectElement.addEventListener('mouseleave', function(e) {
+            e.stopPropagation();
+            
+            const player = document.querySelector('.director-portfolio-lightbox');
+            if (player.getAttribute('data-active') === '1') {
+              // Video player is open - hide hover overlay to return to video
+              hideVideoHoverOverlay();
+            } else {
+              // Video player is closed - hide hover overlay normally
+              hideVideoHoverOverlay();
+            }
+          });
+          
+          // Add click event
+          projectElement.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Close bio content if it's open when clicking any video project
+            const bioContent = document.getElementById('bio-content');
+            if (bioContent && bioContent.classList.contains('open')) {
+              bioContent.classList.remove('open');
+            }
+            
+            const videoSrc = row.Video;
+            if (videoSrc) {
+              openVideoPlayer(videoSrc);
+              
+              // Disable hover overlay (but keep clicks enabled) until cursor leaves the area
+              hoverDelayActive = true;
+              console.log('Video clicked - hover overlay disabled until cursor leaves project area');
+            }
+          });
+          
+          container.appendChild(projectElement);
+        });
+
+        // Re-enable hover effects when cursor leaves the project list area
+        container.addEventListener('mouseleave', function(e) {
+          if (hoverDelayActive) {
+            hoverDelayActive = false;
+            console.log('Cursor left project area - hover overlay re-enabled');
+          }
+        });
+
+        // Bio functionality disabled for now
+        // const bioElement = document.createElement('li');
+        // bioElement.className = 'project-item bio-item';
+        // bioElement.textContent = 'Bio';
+        // bioElement.dataset.bio = 'true';
+        
+        // Bio functionality disabled for now
+        // bioElement.addEventListener('click', function(e) {
+        //   // ... entire bio click handler commented out
+        // });
+        // container.appendChild(bioElement);
+      }
+    });
+
+    // Video preloading function
+    function preloadVideo(videoSrc) {
+      // Create a temporary video element to preload metadata
+      const tempVideo = document.createElement('video');
+      tempVideo.preload = 'metadata';
+      tempVideo.src = videoSrc;
+      tempVideo.style.display = 'none';
+      
+      // Add to DOM temporarily for preloading
+      document.body.appendChild(tempVideo);
+      
+      // Remove after metadata is loaded
+      tempVideo.addEventListener('loadedmetadata', function() {
+        document.body.removeChild(tempVideo);
+        console.log('Video metadata preloaded:', videoSrc);
+      });
+      
+      // Clean up on error
+      tempVideo.addEventListener('error', function() {
+        document.body.removeChild(tempVideo);
+        console.log('Video preload failed:', videoSrc);
+      });
+    }
+
+    // Image hover overlay functions
+    function showVideoHoverOverlay(videoSrc) {
+      const overlay = document.querySelector('.video-hover-overlay');
+      const img = overlay.querySelector('.video-hover-overlay-media-video');
+      
+      // Pause the main video player if it's playing and store its state
+      const mainPlayer = document.querySelector('.director-portfolio-lightbox-media-video');
+      if (mainPlayer && !mainPlayer.paused) {
+        mainPlayer.pause();
+        mainPlayer.setAttribute('data-was-playing', 'true');
+        console.log('Main video player paused');
+      } else {
+        mainPlayer.setAttribute('data-was-playing', 'false');
+      }
+      
+      // Hide the entire video player when entering hover mode
+      const player = document.querySelector('.director-portfolio-lightbox');
+      player.setAttribute('data-active', '0');
+      player.style.display = 'none'; // Force hide with CSS
+      console.log('Video player hidden for rollover');
+      
+      const playbar = document.querySelector('.director-portfolio-lightbox-media-playbar');
+      const controls = document.querySelector('.director-portfolio-lightbox-video-controls');
+      if (playbar) playbar.classList.remove('show');
+      if (controls) controls.classList.remove('show');
+      
+      // Convert video path to image path
+      let imageSrc;
+      if (videoSrc.includes('Prime_CricketWorldCup.mp4')) {
+        imageSrc = 'directors/ariel_martin/posters/Prime_CricketWorldCup_optimized.jpg';
+      } else if (videoSrc.includes('Vodafone_DoubleCoverage.mp4')) {
+        imageSrc = 'directors/ariel_martin/posters/Vodafone.jpg';
+      } else if (videoSrc.includes('KIA_TheUte.mp4')) {
+        imageSrc = 'directors/ariel_martin/posters/KIA_TheUte_optimized.jpg';
+      } else if (videoSrc.includes('GWM_OutThereAwaits.mp4')) {
+        imageSrc = 'directors/ariel_martin/posters/GWM_OutThereAwaits_optimized.jpg';
+      } else if (videoSrc.includes('BALTER_BeersDoComeTrue.mp4')) {
+        imageSrc = 'directors/ariel_martin/posters/BALTER_BeersDoComeTrue_optimized.jpg';
+      } else if (videoSrc.includes('MAS_TheOverthinkermp4.mp4')) {
+        imageSrc = 'directors/ariel_martin/posters/MAS_TheOverthinkermp4_optimized.jpg';
+      } else if (videoSrc.includes('WAPOLICE-LetsJoinTheForces.mp4')) {
+        imageSrc = 'directors/ariel_martin/posters/WAPOLICE-LetsJoinTheForces_optimized.jpg';
+      }
+      
+      // INSTANT SWAP - NO PRELOADING, NO FADE, NO DELAYS
+      img.src = imageSrc;
+      overlay.setAttribute('data-active', '1');
+      console.log('Hover overlay shown for:', imageSrc);
+    }
+
+    function getPosterImageForVideo(videoSrc) {
+      if (videoSrc.includes('Prime_CricketWorldCup.mp4')) {
+        return 'directors/ariel_martin/posters/Prime_CricketWorldCup_optimized.jpg';
+      } else if (videoSrc.includes('Vodafone_DoubleCoverage.mp4')) {
+        return 'directors/ariel_martin/posters/Vodafone.jpg';
+      } else if (videoSrc.includes('KIA_TheUte.mp4')) {
+        return 'directors/ariel_martin/posters/KIA_TheUte_optimized.jpg';
+      } else if (videoSrc.includes('GWM_OutThereAwaits.mp4')) {
+        return 'directors/ariel_martin/posters/GWM_OutThereAwaits_optimized.jpg';
+      } else if (videoSrc.includes('BALTER_BeersDoComeTrue.mp4')) {
+        return 'directors/ariel_martin/posters/BALTER_BeersDoComeTrue_optimized.jpg';
+      } else if (videoSrc.includes('MAS_TheOverthinkermp4.mp4')) {
+        return 'directors/ariel_martin/posters/MAS_TheOverthinkermp4_optimized.jpg';
+      } else if (videoSrc.includes('WAPOLICE-LetsJoinTheForces.mp4')) {
+        return 'directors/ariel_martin/posters/WAPOLICE-LetsJoinTheForces_optimized.jpg';
+      }
+      return '';
+    }
+
+    function hideVideoHoverOverlay() {
+      const overlay = document.querySelector('.video-hover-overlay');
+      const img = overlay.querySelector('.video-hover-overlay-media-video');
+      const player = document.querySelector('.director-portfolio-lightbox');
+      const mainPlayer = document.querySelector('.director-portfolio-lightbox-media-video');
+      
+      img.src = '';
+      overlay.setAttribute('data-active', '0');
+      overlay.style.opacity = '1'; // Reset opacity for next hover
+      
+      // Show the video player again if it was playing
+      if (mainPlayer.getAttribute('data-was-playing') === 'true') {
+        player.setAttribute('data-active', '1');
+        player.style.display = 'flex'; // Reset display style
+        
+        const playbar = document.querySelector('.director-portfolio-lightbox-media-playbar');
+        const controls = document.querySelector('.director-portfolio-lightbox-video-controls');
+        if (playbar) {
+          playbar.classList.add('show');
+          playbar.style.display = ''; // Reset display style
+        }
+        if (controls) {
+          controls.classList.add('show');
+          controls.style.display = ''; // Reset display style
+        }
+        
+        // Resume video if it was playing before hover
+        mainPlayer.play();
+        console.log('Main video player resumed and shown');
+      }
+    }
+
+    function openVideoPlayer(videoSrc) {
+      // Show video player immediately with poster to prevent black flash
+      
+      const player = document.querySelector('.director-portfolio-lightbox');
+      const videoSource = player.querySelector('.director-portfolio-lightbox-media-video source');
+      const videoElement = player.querySelector('.director-portfolio-lightbox-media-video');
+      
+      // NO POSTER - will show black flash
+      // IMMEDIATELY show the player (will be black until video loads)
+      player.setAttribute('data-active', '1');
+      player.style.setProperty('display', 'flex', 'important');
+      player.style.setProperty('visibility', 'visible', 'important');
+      player.style.setProperty('opacity', '1', 'important');
+      player.style.setProperty('z-index', '1700', 'important');
+      
+      // Hide hover overlay immediately since we're showing the poster
+      hideVideoHoverOverlay();
+      
+      // Restore video source
+      videoSource.src = videoSrc;
+      videoElement.src = videoSrc; // Also set the video element's src directly
+      
+      // Set preload for faster playback
+      videoElement.preload = 'auto';
+      
+      // Reset video to beginning
+      videoElement.currentTime = 0;
+      
+      // Show controls immediately since player is visible
+      const playbar = document.querySelector('.director-portfolio-lightbox-media-playbar');
+      const controls = document.querySelector('.director-portfolio-lightbox-video-controls');
+      if (playbar) {
+        playbar.style.display = '';
+        playbar.classList.add('show');
+      }
+      if (controls) {
+        controls.style.display = '';
+        controls.classList.add('show');
+      }
+      
+      console.log('Video player shown with poster, loading video...');
+      
+      // Wait for video to have enough data before auto-playing
+      videoElement.addEventListener('loadeddata', function onVideoLoaded() {
+        console.log('Video loaded, starting playback');
+        
+        // Auto play video (player is already visible with poster)
+        videoElement.play();
+        updateTimeDisplay();
+        
+        // Reset progress bar
+        const progressBar = document.querySelector('.director-portfolio-lightbox-media-playbar-meter-progress');
+        if (progressBar) {
+          progressBar.style.width = '0%';
+        }
+        
+        // Update button states - show pause button since video autoplays
+        const playBtn = document.querySelector('.director-portfolio-lightbox-controls-play');
+        const pauseBtn = document.querySelector('.director-portfolio-lightbox-controls-pause');
+        playBtn.setAttribute('data-active', '0');
+        pauseBtn.setAttribute('data-active', '1');
+        
+        // Remove event listener to avoid memory leaks
+        videoElement.removeEventListener('loadeddata', onVideoLoaded);
+      }, { once: true }); // Use 'once' option to auto-remove listener
+      
+      videoElement.load();
+    }
+
+    function closeVideoPlayer() {
+      const player = document.querySelector('.director-portfolio-lightbox');
+      const video = player.querySelector('.director-portfolio-lightbox-media-video');
+      const playbar = document.querySelector('.director-portfolio-lightbox-media-playbar');
+      const controls = document.querySelector('.director-portfolio-lightbox-video-controls');
+      
+      console.log('Closing video player...');
+      
+      // Force stop video completely
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+        video.src = ''; // Remove video source completely
+        video.load(); // Force reload to stop any buffering
+        console.log('Video completely stopped and source removed');
+      }
+      
+      // Force hide player with !important to override CSS
+      player.setAttribute('data-active', '0');
+      player.style.setProperty('display', 'none', 'important'); // Force hide with !important
+      player.style.setProperty('visibility', 'hidden', 'important'); // Also hide visibility
+      player.style.setProperty('opacity', '0', 'important'); // And opacity
+      player.style.setProperty('z-index', '-1', 'important'); // Move behind everything
+      console.log('Video player aggressively hidden');
+      
+      // Note: Playbar and controls should be hidden by parent container
+      // but let's ensure they're not visible
+      if (playbar) {
+        playbar.classList.remove('show');
+        console.log('Playbar classes removed');
+      }
+      if (controls) {
+        controls.classList.remove('show');
+        console.log('Controls classes removed');
+      }
+      
+      // Reset button states
+      const playBtn = document.querySelector('.director-portfolio-lightbox-controls-play');
+      const pauseBtn = document.querySelector('.director-portfolio-lightbox-controls-pause');
+      if (playBtn) playBtn.setAttribute('data-active', '1');
+      if (pauseBtn) pauseBtn.setAttribute('data-active', '0');
+      
+      console.log('Video player completely closed');
+    }
+
+    function toggleFullscreen() {
+      const video = document.querySelector('.director-portfolio-lightbox-media-video');
+      
+      // iOS Safari/Chrome requires webkitEnterFullscreen
+      if (video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen();
+      } else if (!document.fullscreenElement) {
+        // Standard fullscreen API for desktop
+        if (video.requestFullscreen) {
+          video.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        } else if (video.webkitRequestFullscreen) {
+          video.webkitRequestFullscreen();
+        } else if (video.mozRequestFullScreen) {
+          video.mozRequestFullScreen();
+        } else if (video.msRequestFullscreen) {
+          video.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
+
+    function toggleVideo() {
+      const video = document.querySelector('.director-portfolio-lightbox-media-video');
+      if (video.paused) {
+        playVideo();
+      } else {
+        pauseVideo();
+      }
+    }
+
+    function playVideo() {
+      const video = document.querySelector('.director-portfolio-lightbox-media-video');
+      const playBtn = document.querySelector('.director-portfolio-lightbox-controls-play');
+      const pauseBtn = document.querySelector('.director-portfolio-lightbox-controls-pause');
+      
+      video.play();
+      playBtn.setAttribute('data-active', '0');
+      pauseBtn.setAttribute('data-active', '1');
+    }
+
+    function pauseVideo() {
+      const video = document.querySelector('.director-portfolio-lightbox-media-video');
+      const playBtn = document.querySelector('.director-portfolio-lightbox-controls-play');
+      const pauseBtn = document.querySelector('.director-portfolio-lightbox-controls-pause');
+      
+      video.pause();
+      playBtn.setAttribute('data-active', '1');
+      pauseBtn.setAttribute('data-active', '0');
+    }
+
+    function setProgress(event) {
+      const video = document.querySelector('.director-portfolio-lightbox-media-video');
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const width = rect.width;
+      const percentage = clickX / width;
+      
+      video.currentTime = percentage * video.duration;
+    }
+
+    function updateTimeDisplay() {
+      const video = document.querySelector('.director-portfolio-lightbox-media-video');
+      const currentTimeEl = document.querySelector('.director-portfolio-lightbox-controls-time-current');
+      const totalTimeEl = document.querySelector('.director-portfolio-lightbox-controls-time-total');
+      const progressBar = document.querySelector('.director-portfolio-lightbox-media-playbar-meter-progress');
+      
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }
+      
+      if (video.duration) {
+        totalTimeEl.textContent = formatTime(video.duration);
+      }
+      
+      function updateTime() {
+        currentTimeEl.textContent = formatTime(video.currentTime);
+        
+        if (video.duration) {
+          const percentage = (video.currentTime / video.duration) * 100;
+          progressBar.style.width = percentage + '%';
+        }
+      }
+      
+      video.addEventListener('timeupdate', updateTime);
+      updateTime();
+    }
+
+    // Update button states when video state changes
+    function updateButtonStates() {
+      const video = document.querySelector('.director-portfolio-lightbox-media-video');
+      const playBtn = document.querySelector('.director-portfolio-lightbox-controls-play');
+      const pauseBtn = document.querySelector('.director-portfolio-lightbox-controls-pause');
+      
+      if (video.paused) {
+        playBtn.setAttribute('data-active', '1');
+        pauseBtn.setAttribute('data-active', '0');
+      } else {
+        playBtn.setAttribute('data-active', '0');
+        pauseBtn.setAttribute('data-active', '1');
+      }
+    }
+
+    // Add event listeners for video state changes
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set correct logo on page load (mobile vs desktop)
+      updateLogo();
+      
+      const video = document.querySelector('.director-portfolio-lightbox-media-video');
+      video.addEventListener('play', updateButtonStates);
+      video.addEventListener('pause', updateButtonStates);
+      video.addEventListener('ended', function() {
+        updateButtonStates();
+        // Auto close video player when video ends
+        closeVideoPlayer();
+      });
+
+      // Prevent dragging for all images and videos
+      document.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      // Prevent text selection
+      document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+      });
+
+
+      // Handle window resize for logo updates
+      window.addEventListener('resize', function() {
+        updateLogo();
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', function(e) {
+        // Toggle column guides with 'G' key
+        if (e.key === 'g' || e.key === 'G') {
+          const guides = document.getElementById('column-guides');
+          guides.classList.toggle('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

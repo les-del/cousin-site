@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loader Test - Cousin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: #ffffff;
+      color: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .loader-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+      position: fixed;
+      transition: none; /* Hard cuts, no animation */
+    }
+
+    .loader-digit {
+      height: 100px;
+      width: auto;
+      display: block;
+    }
+
+    /* Responsive sizing */
+    @media (max-width: 768px) {
+      .loader-digit {
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader-container" id="loader">
+    <!-- Images will be dynamically inserted here -->
+  </div>
+
+  <script>
+    // Loader configuration
+    let currentPercentage = 0;
+    const targetPercentage = 100;
+    const loaderElement = document.getElementById('loader');
+
+    // Function to display percentage using PNG images
+    function displayPercentage(percentage) {
+      // Clear current display
+      loaderElement.innerHTML = '';
+
+      // Convert percentage to string without leading zeros
+      const percentageStr = percentage.toString();
+
+      // Create image for each digit
+      for (let i = 0; i < percentageStr.length; i++) {
+        const char = percentageStr[i];
+        const img = document.createElement('img');
+        
+        // Use 0b.png for the last zero in 100%
+        if (char === '0' && percentage === 100 && i === 2) {
+          img.src = 'loader/0b.png';
+        } else {
+          img.src = `loader/${char}.png`;
+        }
+        
+        img.alt = char;
+        img.className = 'loader-digit';
+        
+        // Randomize height for varied sizing
+        const randomHeight = Math.floor(Math.random() * 40) + 80; // Random between 80-120px
+        img.style.height = randomHeight + 'px';
+        
+        loaderElement.appendChild(img);
+      }
+
+      // Add percentage symbol with random size too
+      const percentImg = document.createElement('img');
+      percentImg.src = 'loader/perc.png';
+      percentImg.alt = '%';
+      percentImg.className = 'loader-digit';
+      
+      // Randomize percent symbol height
+      const randomPercentHeight = Math.floor(Math.random() * 40) + 80; // Random between 80-120px
+      percentImg.style.height = randomPercentHeight + 'px';
+      
+      loaderElement.appendChild(percentImg);
+
+      // Randomly position the loader on screen
+      randomizePosition();
+    }
+
+    // Function to randomly position loader on viewport
+    function randomizePosition() {
+      // Get viewport dimensions
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      // Define a more constrained area slightly off-center
+      const areaWidth = 200; // Width of the movement area (smaller)
+      const areaHeight = 150; // Height of the movement area (smaller)
+      
+      // Center area but offset slightly (off-center)
+      const centerX = viewportWidth / 2 - areaWidth / 2 + 50; // Offset 50px right
+      const centerY = viewportHeight / 2 - areaHeight / 2 - 30; // Offset 30px up
+
+      // Generate random position within the constrained area
+      const randomX = centerX + Math.random() * areaWidth;
+      const randomY = centerY + Math.random() * areaHeight;
+
+      // Apply position
+      loaderElement.style.left = randomX + 'px';
+      loaderElement.style.top = randomY + 'px';
+    }
+
+    // Animate loader from 0 to 100
+    function animateLoader() {
+      if (currentPercentage < targetPercentage) {
+        displayPercentage(currentPercentage);
+        
+        // Increment by random amount between 4-8 for varied progression
+        let increment = Math.floor(Math.random() * 5) + 4; // Random between 4-8
+        
+        // Force hitting 98% exactly
+        if (currentPercentage < 98 && currentPercentage + increment > 98) {
+          increment = 98 - currentPercentage;
+        }
+        
+        currentPercentage += increment;
+        
+        // Make sure we don't go past 100
+        if (currentPercentage >= targetPercentage) {
+          currentPercentage = targetPercentage;
+          displayPercentage(currentPercentage); // Show 100%
+          console.log('Loading complete - stopped at 100%');
+          return; // Stop here
+        }
+        
+        // Randomize delay - very fast between 28-98%
+        let minDelay, maxDelay;
+        
+        if (currentPercentage < 20) {
+          // Slower at start (0-20%)
+          minDelay = 300;
+          maxDelay = 700;
+        } else if (currentPercentage >= 28 && currentPercentage < 98) {
+          // Very fast between 28-98%
+          minDelay = 50;
+          maxDelay = 150;
+        } else {
+          // Normal speed for 20-28% and at 98%+
+          minDelay = 100;
+          maxDelay = 300;
+        }
+        
+        const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+        
+        setTimeout(animateLoader, delay);
+      }
+    }
+
+    // Start the loader animation
+    setTimeout(animateLoader, 500); // Start directly with animation (no initial display)
+  </script>
+</body>
+</html>
+
