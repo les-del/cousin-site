@@ -1304,15 +1304,22 @@
       const isMobile = window.innerWidth <= 768;
       
       if (contactContent.classList.contains('open')) {
-        // Hide Cousin logo when contact section is open (hi.png is showing)
+        // Hide logo when contact section is open (hi.png is showing); reset src so Toby/Ariel graphic doesn't persist
+        logo.src = isMobile ? assetUrl('assets/images/logos/CousinMed.png') : assetUrl('assets/images/logos/cousin_logo_HiRes_2.png');
         logo.classList.add('hidden');
+        logo.style.setProperty('visibility', 'hidden', 'important');
+        logo.style.setProperty('opacity', '0', 'important');
       } else if (arielContent.classList.contains('open')) {
         // Only show Ariel PNG when Ariel Martin section is specifically open
         logo.src = assetUrl('directors/ariel_martin/Ariel.png');
         logo.classList.remove('hidden');
+        logo.style.removeProperty('visibility');
+        logo.style.removeProperty('opacity');
       } else if (tobyContent && tobyContent.classList.contains('open')) {
         logo.src = assetUrl('directors/toby_morris/Toby.png');
         logo.classList.remove('hidden');
+        logo.style.removeProperty('visibility');
+        logo.style.removeProperty('opacity');
       } else {
         // Show Cousin logo in ALL other scenarios
         if (isMobile) {
@@ -1321,6 +1328,8 @@
           logo.src = assetUrl('assets/images/logos/cousin_logo_HiRes_2.png');
         }
         logo.classList.remove('hidden');
+        logo.style.removeProperty('visibility');
+        logo.style.removeProperty('opacity');
       }
     }
 
@@ -1555,7 +1564,8 @@
         contactImageOverlay.classList.remove('show');
       }
       
-      // Update logo visibility AFTER everything else is done to prevent glitches
+      // Update logo immediately so director graphic (Toby/Ariel) doesn't stay visible when Contact opens
+      updateLogo();
       setTimeout(updateLogo, 10);
     });
 
