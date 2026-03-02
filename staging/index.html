@@ -959,6 +959,12 @@
               <!-- Projects loaded from CSV -->
             </ul>
           </li>
+          <li>
+            <div id="kyra-toggle" class="nav-toggle">Kyra Bartley</div>
+            <ul id="kyra-projects" class="nav-sublist">
+              <!-- Projects loaded from CSV -->
+            </ul>
+          </li>
         </ul>
       </li>
       
@@ -1278,6 +1284,8 @@
       arielContent.classList.remove('open'); // Also close Ariel Martin
       const tobyContent = document.getElementById('toby-projects');
       if (tobyContent) tobyContent.classList.remove('open');
+      const kyraContent = document.getElementById('kyra-projects');
+      if (kyraContent) kyraContent.classList.remove('open');
       
       // Close bio content if it's open
       const bioContent = document.getElementById('bio-content');
@@ -1300,11 +1308,12 @@
       const logo = document.querySelector('.logo');
       const arielContent = document.getElementById('ariel-projects');
       const tobyContent = document.getElementById('toby-projects');
+      const kyraContent = document.getElementById('kyra-projects');
       const contactContent = document.getElementById('contact-content');
       const isMobile = window.innerWidth <= 768;
       
       if (contactContent.classList.contains('open')) {
-        // Hide logo when contact section is open (hi.png is showing); reset src so Toby/Ariel graphic doesn't persist
+        // Hide logo when contact section is open (hi.png is showing); reset src so director graphics don't persist
         logo.src = isMobile ? assetUrl('assets/images/logos/CousinMed.png') : assetUrl('assets/images/logos/cousin_logo_HiRes_2.png');
         logo.classList.add('hidden');
         logo.style.setProperty('visibility', 'hidden', 'important');
@@ -1317,6 +1326,11 @@
         logo.style.removeProperty('opacity');
       } else if (tobyContent && tobyContent.classList.contains('open')) {
         logo.src = assetUrl('directors/toby_morris/Toby.png');
+        logo.classList.remove('hidden');
+        logo.style.removeProperty('visibility');
+        logo.style.removeProperty('opacity');
+      } else if (kyraContent && kyraContent.classList.contains('open')) {
+        logo.src = assetUrl('directors/kyra_bartley/kyra_logo.png');
         logo.classList.remove('hidden');
         logo.style.removeProperty('visibility');
         logo.style.removeProperty('opacity');
@@ -1439,13 +1453,15 @@
     document.getElementById('ariel-toggle').addEventListener('click', function(e) {
       const content = document.getElementById('ariel-projects');
       const tobyContent = document.getElementById('toby-projects');
+      const kyraContent = document.getElementById('kyra-projects');
       
       // Always close video when clicking a director (switching or toggling) so the two sections stay distinct
       closeVideoAndReset();
       
-      // Only one director section open at a time: close Toby when opening Ariel
+      // Only one director section open at a time: close others when opening Ariel
       if (!content.classList.contains('open')) {
         if (tobyContent) tobyContent.classList.remove('open');
+        if (kyraContent) kyraContent.classList.remove('open');
       }
       
       // Toggle current section
@@ -1466,13 +1482,15 @@
     document.getElementById('toby-toggle').addEventListener('click', function(e) {
       const content = document.getElementById('toby-projects');
       const arielContent = document.getElementById('ariel-projects');
+      const kyraContent = document.getElementById('kyra-projects');
       
       // Always close video when clicking a director (switching or toggling) so the two sections stay distinct
       closeVideoAndReset();
       
-      // Only one director section open at a time: close Ariel when opening Toby
+      // Only one director section open at a time: close Ariel/Kyra when opening Toby
       if (!content.classList.contains('open')) {
         if (arielContent) arielContent.classList.remove('open');
+        if (kyraContent) kyraContent.classList.remove('open');
       }
       
       content.classList.toggle('open');
@@ -1522,6 +1540,30 @@
       }
     });
 
+    // Hover Kyra: momentarily hide video (pause + hide), show Kyra's logo. Resume video on mouseleave.
+    document.getElementById('kyra-toggle').addEventListener('mouseenter', function(e) {
+      e.stopPropagation();
+      const directorsContent = document.getElementById('directors-content');
+      const kyraContent = document.getElementById('kyra-projects');
+      const logo = document.querySelector('.logo');
+      if (!directorsContent.classList.contains('open')) return;
+      suspendVideoForDirectorHover(); // pause and hide lightbox; video will resume on mouseleave
+      if (!kyraContent.classList.contains('open') && logo) {
+        logo.src = assetUrl('directors/kyra_bartley/kyra_logo.png');
+        logo.classList.remove('hidden');
+        logo.style.opacity = '1';
+      }
+    });
+
+    document.getElementById('kyra-toggle').addEventListener('mouseleave', function(e) {
+      e.stopPropagation();
+      resumeVideoAfterDirectorHover(); // resume from same position if we had suspended
+      const kyraContent = document.getElementById('kyra-projects');
+      if (!kyraContent.classList.contains('open')) {
+        updateLogo();
+      }
+    });
+
     document.getElementById('toby-toggle').addEventListener('mouseleave', function(e) {
       e.stopPropagation();
       resumeVideoAfterDirectorHover(); // resume from same position if we had suspended
@@ -1547,6 +1589,8 @@
       arielContent.classList.remove('open'); // Also close Ariel Martin
       const tobyContent = document.getElementById('toby-projects');
       if (tobyContent) tobyContent.classList.remove('open');
+      const kyraContent = document.getElementById('kyra-projects');
+      if (kyraContent) kyraContent.classList.remove('open');
       
       // Close bio content if it's open
       const bioContent = document.getElementById('bio-content');
@@ -1746,6 +1790,89 @@
           if (hoverDelayActive) {
             hoverDelayActive = false;
             console.log('Cursor left project area - hover overlay re-enabled');
+          }
+        });
+      }
+    });
+
+    // Load Kyra Bartley CSV data and create project elements
+    Papa.parse('data/KyraBartley.csv', {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const container = document.getElementById('kyra-projects');
+        
+        const validData = results.data.filter(item => item.Client && item.Title);
+
+        validData.forEach(function(row, index) {
+          const projectElement = document.createElement('li');
+          projectElement.className = 'project-item';
+          projectElement.textContent = `${row.Client} '${row.Title}'`;
+          projectElement.dataset.thumbnail = assetUrl(row.Thumbnail);
+          projectElement.dataset.video = assetUrl(row.Video);
+          projectElement.dataset.index = index;
+          
+          projectElement.addEventListener('mouseenter', function(e) {
+            e.stopPropagation();
+            
+            const bioContent = document.getElementById('bio-content');
+            if (bioContent && bioContent.classList.contains('open')) {
+              bioContent.classList.remove('open');
+            }
+            
+            if (hoverDelayActive) {
+              return;
+            }
+            
+            const player = document.querySelector('.director-portfolio-lightbox');
+            const videoSrc = assetUrl(row.Video);
+            
+            if (videoSrc) {
+              preloadVideo(videoSrc);
+              
+              if (player.getAttribute('data-active') === '1') {
+                showVideoHoverOverlay(videoSrc);
+              } else {
+                showVideoHoverOverlay(videoSrc);
+              }
+            }
+          });
+
+          projectElement.addEventListener('mouseleave', function(e) {
+            e.stopPropagation();
+            
+            const player = document.querySelector('.director-portfolio-lightbox');
+            if (player.getAttribute('data-active') === '1') {
+              hideVideoHoverOverlay();
+            } else {
+              hideVideoHoverOverlay();
+            }
+          });
+          
+          projectElement.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            const bioContent = document.getElementById('bio-content');
+            if (bioContent && bioContent.classList.contains('open')) {
+              bioContent.classList.remove('open');
+            }
+            
+            const videoSrc = assetUrl(row.Video);
+            if (videoSrc) {
+              openVideoPlayer(videoSrc);
+              
+              hoverDelayActive = true;
+              console.log('Video clicked - hover overlay disabled until cursor leaves project area');
+            }
+          });
+          
+          container.appendChild(projectElement);
+        });
+
+        container.addEventListener('mouseleave', function(e) {
+          if (hoverDelayActive) {
+            hoverDelayActive = false;
+            console.log('Cursor left project area - hover overlay re-enabled (Kyra)');
           }
         });
       }
