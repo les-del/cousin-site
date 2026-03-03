@@ -273,8 +273,17 @@
       padding: 0;
     }
 
-    /* Toby logo specific positioning - same as Ariel (match toby_name.png path) */
+    /* Toby logo specific positioning - same as Ariel */
     .logo[src*="Toby"] {
+      left: calc(1em + 5 * ((100vw - 13em) / 12 + 1em)); /* Start at column 6 */
+      top: calc(1em + (100vh - 7em) / 6 + 1em); /* Start at row 2 */
+      width: calc((100vw - 13em) / 12 * 7 + 6em); /* 7 columns + 6 gutters */
+      right: 1em; /* Respect right margin */
+      padding: 0;
+    }
+
+    /* Kyra logo specific positioning - same grid as Ariel/Toby */
+    .logo[src*="kyra_bartley"] {
       left: calc(1em + 5 * ((100vw - 13em) / 12 + 1em)); /* Start at column 6 */
       top: calc(1em + (100vh - 7em) / 6 + 1em); /* Start at row 2 */
       width: calc((100vw - 13em) / 12 * 7 + 6em); /* 7 columns + 6 gutters */
@@ -294,6 +303,11 @@
         width: calc((100vw - 9em) / 8 * 5 + 4em); /* 5 columns (4-8) + 4 gutters */
         right: auto;
       }
+      .logo[src*="kyra_bartley"] {
+        left: calc(1em + 3 * ((100vw - 9em) / 8 + 1em)); /* Start at column 4 */
+        width: calc((100vw - 9em) / 8 * 5 + 4em); /* 5 columns (4-8) + 4 gutters */
+        right: auto;
+      }
     }
 
     /* Mobile responsive Ariel logo (6 columns) */
@@ -305,6 +319,12 @@
         top: calc((1em + (100vh - 7em) / 6 + 1em) * 1.2); /* 20% lower than desktop */
       }
       .logo[src*="Toby"] {
+        left: 1em; /* Start at left margin */
+        width: calc(100vw - 2em); /* Full width within margins */
+        right: 1em; /* End at right margin */
+        top: calc((1em + (100vh - 7em) / 6 + 1em) * 1.2); /* 20% lower than desktop */
+      }
+      .logo[src*="kyra_bartley"] {
         left: 1em; /* Start at left margin */
         width: calc(100vw - 2em); /* Full width within margins */
         right: 1em; /* End at right margin */
@@ -459,7 +479,7 @@
       /* Custom cursor handles this */
     }
 
-    /* Video Player */
+    /* Video Player - verbatim from root index.html */
     .director-portfolio-lightbox {
       display: none;
       position: fixed;
@@ -626,7 +646,7 @@
       text-transform: uppercase;
     }
 
-    /* Video hover overlay */
+    /* Video hover overlay - verbatim from root index.html */
     .video-hover-overlay {
       position: fixed;
       top: 0;
@@ -948,20 +968,20 @@
         <div id="directors-toggle" class="nav-toggle">Directors</div>
         <ul id="directors-content" class="nav-sublist">
           <li>
-            <div id="ariel-toggle" class="nav-toggle">Ariel martin</div>
+            <div id="ariel-toggle" class="nav-toggle">Ariel Martin</div>
             <ul id="ariel-projects" class="nav-sublist">
               <!-- Projects will be loaded dynamically from CSV -->
             </ul>
           </li>
           <li>
-            <div id="toby-toggle" class="nav-toggle">Toby Morris</div>
-            <ul id="toby-projects" class="nav-sublist">
+            <div id="kyra-toggle" class="nav-toggle">Kyra Bartley</div>
+            <ul id="kyra-projects" class="nav-sublist">
               <!-- Projects loaded from CSV -->
             </ul>
           </li>
           <li>
-            <div id="kyra-toggle" class="nav-toggle">Kyra Bartley</div>
-            <ul id="kyra-projects" class="nav-sublist">
+            <div id="toby-toggle" class="nav-toggle">Toby Morris</div>
+            <ul id="toby-projects" class="nav-sublist">
               <!-- Projects loaded from CSV -->
             </ul>
           </li>
@@ -1040,7 +1060,10 @@
       if (!path) return path;
       if (path.indexOf('http') === 0) return path; // already absolute
       const base = (window.COUSIN_ASSET_BASE || '').replace(/\/$/, '');
-      return base ? base + '/' + path.replace(/^\//, '') : path;
+      if (!base) return path;
+      // Encode each path segment so spaces/special chars (e.g. "2. Westfield_Aunties.mp4") work in URLs
+      const encodedPath = path.replace(/^\//, '').split('/').map(function(seg) { return encodeURIComponent(seg); }).join('/');
+      return base + '/' + encodedPath;
     }
 
     // When using AWS asset base (staging), rewrite static asset URLs in the page
@@ -1330,7 +1353,7 @@
         logo.style.removeProperty('visibility');
         logo.style.removeProperty('opacity');
       } else if (kyraContent && kyraContent.classList.contains('open')) {
-        logo.src = assetUrl('directors/kyra_bartley/kyra_logo.png');
+        logo.src = assetUrl('directors/kyra_bartley/Kyra.png');
         logo.classList.remove('hidden');
         logo.style.removeProperty('visibility');
         logo.style.removeProperty('opacity');
@@ -1504,6 +1527,31 @@
       }
     });
 
+    document.getElementById('kyra-toggle').addEventListener('click', function(e) {
+      const content = document.getElementById('kyra-projects');
+      const arielContent = document.getElementById('ariel-projects');
+      const tobyContent = document.getElementById('toby-projects');
+      
+      // Always close video when clicking a director (switching or toggling) so the two sections stay distinct
+      closeVideoAndReset();
+      
+      // Only one director section open at a time: close Ariel/Toby when opening Kyra
+      if (!content.classList.contains('open')) {
+        if (arielContent) arielContent.classList.remove('open');
+        if (tobyContent) tobyContent.classList.remove('open');
+      }
+      
+      content.classList.toggle('open');
+      updateLogo();
+      
+      if (content.classList.contains('open')) {
+        disableHoverEffects();
+        setTimeout(() => {
+          enableHoverEffects();
+        }, 500);
+      }
+    });
+
     // Hover Ariel: momentarily hide video (pause + hide), show Ariel's logo. Resume video on mouseleave.
     document.getElementById('ariel-toggle').addEventListener('mouseenter', function(e) {
       const directorsContent = document.getElementById('directors-content');
@@ -1549,7 +1597,7 @@
       if (!directorsContent.classList.contains('open')) return;
       suspendVideoForDirectorHover(); // pause and hide lightbox; video will resume on mouseleave
       if (!kyraContent.classList.contains('open') && logo) {
-        logo.src = assetUrl('directors/kyra_bartley/kyra_logo.png');
+        logo.src = assetUrl('directors/kyra_bartley/Kyra.png');
         logo.classList.remove('hidden');
         logo.style.opacity = '1';
       }
@@ -1831,9 +1879,9 @@
               preloadVideo(videoSrc);
               
               if (player.getAttribute('data-active') === '1') {
-                showVideoHoverOverlay(videoSrc);
+                showVideoHoverOverlay(videoSrc, 'kyra_bartley');
               } else {
-                showVideoHoverOverlay(videoSrc);
+                showVideoHoverOverlay(videoSrc, 'kyra_bartley');
               }
             }
           });
@@ -1859,7 +1907,7 @@
             
             const videoSrc = assetUrl(row.Video);
             if (videoSrc) {
-              openVideoPlayer(videoSrc);
+              openVideoPlayer(videoSrc, 'kyra_bartley');
               
               hoverDelayActive = true;
               console.log('Video clicked - hover overlay disabled until cursor leaves project area');
@@ -1902,10 +1950,18 @@
       });
     }
 
-    // Image hover overlay functions - posterBase = 'ariel_martin' | 'toby_morris' (director folder, same structure)
+    // Image hover overlay functions - posterBase = 'ariel_martin' | 'toby_morris' | 'kyra_bartley'
     function getPosterImageForVideo(videoSrc, posterBase) {
       posterBase = posterBase || 'ariel_martin';
-      const base = 'directors/' + posterBase + '/posters/';
+      let base;
+      if (posterBase === 'toby_morris') {
+        base = 'directors/toby_morris/posters/';
+      } else if (posterBase === 'kyra_bartley') {
+        // Kyra's stills live directly under directors/kyra_bartley/
+        base = 'directors/kyra_bartley/';
+      } else {
+        base = 'directors/ariel_martin/posters/';
+      }
       let path = '';
       if (posterBase === 'toby_morris') {
         if (videoSrc.includes('SingaporeNavy')) path = base + 'SingaporeNavy_optimized.jpg';
@@ -1915,6 +1971,17 @@
         else if (videoSrc.includes('TikTok')) path = base + 'TikTok_optimized.jpg';
         else if (videoSrc.includes('TheIconic')) path = base + 'TheIconic_optimized.jpg';
         else if (videoSrc.includes('Space')) path = base + 'Space_optimized.jpg';
+      } else if (posterBase === 'kyra_bartley') {
+        if (videoSrc.includes('TourismTas')) path = base + '1. Tourism Tas Still.png';
+        else if (videoSrc.includes('Westfield_Aunties')) path = base + '2. Westfield Still.png';
+        else if (videoSrc.includes('Pirtek_Tug')) path = base + '3. Pirtek Still.png';
+        else if (videoSrc.includes('Postfinance')) path = base + '4. Postfinance Still.png';
+        else if (videoSrc.includes('UNHCR')) path = base + '5. UNHCR Still.png';
+        else if (videoSrc.includes('Vodafone')) path = base + '6. Vodafone Still.png';
+        else if (videoSrc.includes('FijiTourism')) path = base + '7. FijiTourism Still.png';
+        else if (videoSrc.includes('ModiBodi_SharkWeek')) path = base + '8. Modibodi Still.png';
+        else if (videoSrc.includes('GoogleAFL')) path = base + '9. Google Still.png';
+        else if (videoSrc.includes('Frankie4')) path = base + '10. Frankie4 Still.png';
       } else {
         if (videoSrc.includes('Prime_CricketWorldCup.mp4')) path = base + 'Prime_CricketWorldCup_optimized.jpg';
         else if (videoSrc.includes('Vodafone_DoubleCoverage.mp4')) path = base + 'Vodafone.jpg';
@@ -1953,6 +2020,9 @@
       
       const imageSrc = getPosterImageForVideo(videoSrc, posterBase);
       img.src = imageSrc;
+      overlay.style.removeProperty('display');
+      overlay.style.removeProperty('visibility');
+      overlay.style.removeProperty('z-index');
       overlay.setAttribute('data-active', '1');
       console.log('Hover overlay shown for:', imageSrc);
     }
@@ -1963,9 +2033,12 @@
       const player = document.querySelector('.director-portfolio-lightbox');
       const mainPlayer = document.querySelector('.director-portfolio-lightbox-media-video');
       
-      img.src = '';
+      if (img) img.src = '';
       overlay.setAttribute('data-active', '0');
       overlay.style.opacity = '1'; // Reset opacity for next hover
+      overlay.style.setProperty('display', 'none', 'important');
+      overlay.style.setProperty('visibility', 'hidden', 'important');
+      overlay.style.setProperty('z-index', '-1', 'important');
       
       // Show the video player again if it was playing
       if (mainPlayer.getAttribute('data-was-playing') === 'true') {
@@ -2039,8 +2112,7 @@
       // Wait for video to have enough data before auto-playing
       videoElement.addEventListener('loadeddata', function onVideoLoaded() {
         console.log('Video loaded, starting playback');
-        
-        // Auto play video (player is already visible with poster)
+        videoElement.poster = ''; // Clear poster so video frames show (fixes stuck poster when video track renders late)
         videoElement.play();
         updateTimeDisplay();
         
@@ -2059,6 +2131,10 @@
         // Remove event listener to avoid memory leaks
         videoElement.removeEventListener('loadeddata', onVideoLoaded);
       }, { once: true }); // Use 'once' option to auto-remove listener
+      
+      videoElement.addEventListener('error', function onVideoError() {
+        console.error('Video failed to load:', videoSrc, videoElement.error);
+      }, { once: true });
       
       videoElement.load();
     }
