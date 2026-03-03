@@ -1,7 +1,7 @@
 # Cousin website
 
 - **Live site:** [cousin.site](https://www.cousin.site)
-- **Staging:** [cousin.site/staging](https://www.cousin.site/staging) — three directors (Ariel, Kyra, Toby), assets from S3.
+- **Staging:** [cousin.site/staging](https://www.cousin.site/staging) — password-protected; three directors (Ariel, Kyra, Toby), assets from S3.
 
 Staging uses `staging/index.html` and `staging/data/*.csv`. Media (videos/posters) are loaded from the S3 bucket when `COUSIN_ASSET_BASE` is set in that page.
 
