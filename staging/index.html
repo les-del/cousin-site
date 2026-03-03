@@ -997,7 +997,8 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         errEl.textContent = '';
-        if (input.value === 'b00bs') {
+        var ok = (input.value === 'b00bs' || input.value === 'NickSimpkinsRulz');
+        if (ok) {
           sessionStorage.setItem(STORAGE_KEY, '1');
           gate.classList.add('hidden');
         } else {
