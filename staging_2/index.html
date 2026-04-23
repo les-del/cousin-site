@@ -916,8 +916,103 @@
   <link rel="preload" href="assets/loader/alt_2/85.png" as="image">
   <link rel="preload" href="assets/loader/alt_2/93.png" as="image">
   <link rel="preload" href="assets/loader/alt_2/100.png" as="image">
+  <style>
+    /* Staging password gate – full-screen cover until correct password */
+    #staging-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 1000000;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      cursor: auto;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+    #staging-gate.hidden { display: none !important; }
+    #staging-gate .gate-form {
+      text-align: center;
+      padding: 2rem;
+    }
+    #staging-gate label {
+      display: block;
+      margin-bottom: 0.75rem;
+      color: #000;
+      font-size: 0.9rem;
+    }
+    #staging-gate input[type="password"] {
+      display: block;
+      width: 100%;
+      max-width: 220px;
+      margin: 0 auto 1rem;
+      padding: 0.6rem 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+    }
+    #staging-gate input[type="password"]:focus {
+      outline: 2px solid #000;
+      outline-offset: 2px;
+    }
+    #staging-gate button {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      padding: 0.5rem 1.25rem;
+      background: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    #staging-gate .gate-error {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #c00;
+      min-height: 1.2em;
+    }
+  </style>
 </head>
 <body>
+  <!-- Staging password gate -->
+  <div id="staging-gate">
+    <div class="gate-form">
+      <label for="staging-password">Enter password</label>
+      <form id="staging-gate-form" autocomplete="off">
+        <input type="password" id="staging-password" name="password" placeholder="Password" autocomplete="off">
+        <button type="submit">Enter</button>
+      </form>
+      <p class="gate-error" id="staging-gate-error" aria-live="polite"></p>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var STORAGE_KEY = 'stagingUnlocked';
+      var gate = document.getElementById('staging-gate');
+      var form = document.getElementById('staging-gate-form');
+      var input = document.getElementById('staging-password');
+      var errEl = document.getElementById('staging-gate-error');
+      if (sessionStorage.getItem(STORAGE_KEY) === '1') {
+        gate.classList.add('hidden');
+        return;
+      }
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        errEl.textContent = '';
+        var ok = (input.value === 'b00bs' || input.value === 'NickSimpkinsRulz');
+        if (ok) {
+          sessionStorage.setItem(STORAGE_KEY, '1');
+          gate.classList.add('hidden');
+        } else {
+          errEl.textContent = 'Wrong password';
+          input.value = '';
+          input.focus();
+        }
+      });
+    })();
+  </script>
   <h1 class="visually-hidden">Cousin – Production Company</h1>
   <div class="visually-hidden">
     <p>Cousin is a production company making films and commercials. Founded by Nick Simkins, Cousin production company features director Ariel Martin. Cousin films and commercials showcase creative storytelling and production excellence. Contact Nick Simkins at Cousin for film production and commercial production services.</p>
