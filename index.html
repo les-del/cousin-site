@@ -387,17 +387,13 @@
       margin-bottom: 1em;
     }
 
-    /* Ensure director rows are visible when Directors is open */
+    /* Ensure both director rows (Ariel, Toby) are visible when Directors is open */
     #directors-content > li {
       display: list-item;
       margin-bottom: 0.25em;
     }
     #directors-content > li:last-child {
       margin-bottom: 0;
-    }
-    /* staging_2 variant: hide/disable Toby Morris locally */
-    #toby-nav-item {
-      display: none !important;
     }
 
     /* Add spacing to About sublist as well */
@@ -983,7 +979,7 @@
               <!-- Projects loaded from CSV -->
             </ul>
           </li>
-          <li id="toby-nav-item">
+          <li>
             <div id="toby-toggle" class="nav-toggle">Toby Morris</div>
             <ul id="toby-projects" class="nav-sublist">
               <!-- Projects loaded from CSV -->
