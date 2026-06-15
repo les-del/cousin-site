@@ -606,7 +606,7 @@
     } catch {
       loginError.textContent = isLocal
         ? 'Cannot reach admin API. Run npm start in the editable folder.'
-        : 'CMS backend not running yet. Deploy the API on Render (see RENDER-SETUP.md in the repo), then try again.';
+        : 'CMS backend not running. Deploy on Netlify (see NETLIFY-SETUP.md), then try again.';
     }
   });
 

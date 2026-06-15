@@ -8,10 +8,12 @@ window.COUSIN_ASSET_BASE = 'https://cousin-productions.s3.ap-southeast-2.amazona
 window.COUSIN_PATH_PREFIX = '../';
 
 var _cousinHost = window.location.hostname;
+var _isNetlify = _cousinHost.endsWith('.netlify.app');
+var _netlifySite = 'https://cousin-cms.netlify.app';
 window.COUSIN_API_BASE =
-  _cousinHost === 'localhost' || _cousinHost === '127.0.0.1'
+  _cousinHost === 'localhost' || _cousinHost === '127.0.0.1' || _isNetlify
     ? '/api'
-    : 'https://cousin-editable-api.onrender.com/api';
+    : _netlifySite + '/api';
 
 // Director metadata — nav DOM ids must match index.html
 window.COUSIN_DIRECTORS = [

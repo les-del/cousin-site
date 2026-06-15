@@ -27,37 +27,49 @@ function safeFilename(name) {
 export function parseMultipart(req) {
   return new Promise(function (resolve, reject) {
     const busboy = Busboy({ headers: req.headers });
-    const result = { directorId: '', fileBuffer: null, filename: '', mimeType: '' };
-
-    busboy.on('field', function (name, val) {
-      if (name === 'directorId') result.directorId = val;
-    });
-
-    busboy.on('file', function (_name, file, info) {
-      const chunks = [];
-      let size = 0;
-      file.on('data', function (chunk) {
-        size += chunk.length;
-        if (size > MAX_BYTES) {
-          reject(new Error('File too large (max 15 MB)'));
-          file.resume();
-          return;
-        }
-        chunks.push(chunk);
-      });
-      file.on('end', function () {
-        result.fileBuffer = Buffer.concat(chunks);
-        result.filename = info.filename;
-        result.mimeType = info.mimeType;
-      });
-    });
-
-    busboy.on('finish', function () {
-      resolve(result);
-    });
-    busboy.on('error', reject);
+    parseBusboy(busboy, resolve, reject);
     req.pipe(busboy);
   });
+}
+
+export function parseMultipartBuffer(buffer, headers) {
+  return new Promise(function (resolve, reject) {
+    const busboy = Busboy({ headers: headers || {} });
+    parseBusboy(busboy, resolve, reject);
+    busboy.end(buffer);
+  });
+}
+
+function parseBusboy(busboy, resolve, reject) {
+  const result = { directorId: '', fileBuffer: null, filename: '', mimeType: '' };
+
+  busboy.on('field', function (name, val) {
+    if (name === 'directorId') result.directorId = val;
+  });
+
+  busboy.on('file', function (_name, file, info) {
+    const chunks = [];
+    let size = 0;
+    file.on('data', function (chunk) {
+      size += chunk.length;
+      if (size > MAX_BYTES) {
+        reject(new Error('File too large (max 15 MB)'));
+        file.resume();
+        return;
+      }
+      chunks.push(chunk);
+    });
+    file.on('end', function () {
+      result.fileBuffer = Buffer.concat(chunks);
+      result.filename = info.filename;
+      result.mimeType = info.mimeType;
+    });
+  });
+
+  busboy.on('finish', function () {
+    resolve(result);
+  });
+  busboy.on('error', reject);
 }
 
 async function uploadToS3(buffer, key, contentType, config) {
@@ -82,7 +94,15 @@ async function uploadToLocal(buffer, key, repoRoot) {
 
 export async function handlePosterUpload(req, config, repoRoot) {
   const { directorId, fileBuffer, filename, mimeType } = await parseMultipart(req);
+  return processPosterUpload(directorId, fileBuffer, filename, mimeType, config, repoRoot);
+}
 
+export async function handlePosterUploadBuffer(buffer, headers, config, repoRoot) {
+  const { directorId, fileBuffer, filename, mimeType } = await parseMultipartBuffer(buffer, headers);
+  return processPosterUpload(directorId, fileBuffer, filename, mimeType, config, repoRoot);
+}
+
+async function processPosterUpload(directorId, fileBuffer, filename, mimeType, config, repoRoot) {
   if (!directorId || !DIRECTOR_POSTER_PREFIX[directorId]) {
     throw new Error('Invalid director');
   }
