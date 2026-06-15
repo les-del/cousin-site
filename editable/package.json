@@ -1,0 +1,13 @@
+{
+  "name": "cousin-editable",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.mjs",
+    "dev": "node server/index.mjs"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1068.0",
+    "busboy": "^1.6.0"
+  }
+}

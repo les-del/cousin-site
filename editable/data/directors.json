@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-15",
+  "directors": [
+    {
+      "id": "ariel_martin",
+      "navId": "ariel",
+      "name": "Ariel Martin",
+      "logo": "directors/ariel_martin/Ariel.png",
+      "projects": [
+        {
+          "client": "TOYOTA -",
+          "title": "LONG LIVE RECREATION",
+          "poster": "directors/ariel_martin/reel/2. RAV4 Still.png",
+          "video": "directors/ariel_martin/reel/RAV4_LLR_60v42_DC.mp4"
+        },
+        {
+          "client": "Vodafone",
+          "title": "Double time",
+          "poster": "directors/ariel_martin/posters/Vodafone.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/Vodafone_DoubleCoverage.mp4"
+        },
+        {
+          "client": "BALTER",
+          "title": "HEKLLLLOOSOSOS",
+          "poster": "directors/ariel_martin/posters/BALTER_BeersDoComeTrue_optimized.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/BALTER_BeersDoComeTrue.mp4"
+        },
+        {
+          "client": "Kia",
+          "title": "The Ute",
+          "poster": "directors/ariel_martin/posters/KIA_TheUte_optimized.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/KIA_TheUte.mp4"
+        },
+        {
+          "client": "WA Police",
+          "title": "Let's Join The Forces",
+          "poster": "directors/ariel_martin/posters/WAPOLICE-LetsJoinTheForces_optimized.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/WAPOLICE-LetsJoinTheForces.mp4"
+        },
+        {
+          "client": "MAS",
+          "title": "The Overthinker",
+          "poster": "directors/ariel_martin/posters/MAS_TheOverthinkermp4_optimized.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/MAS_TheOverthinkermp4.mp4"
+        },
+        {
+          "client": "Prime",
+          "title": "BLACH BLACH",
+          "poster": "directors/ariel_martin/posters/Prime_CricketWorldCup_optimized.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/Prime_CricketWorldCup.mp4"
+        },
+        {
+          "client": "GWM",
+          "title": "Out There Awaits",
+          "poster": "directors/ariel_martin/posters/GWM_OutThereAwaits_optimized.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/GWM_OutThereAwaits.mp4"
+        }
+      ]
+    },
+    {
+      "id": "kyra_bartley",
+      "navId": "kyra",
+      "name": "Kyra Bartley",
+      "logo": "directors/kyra_bartley/Kyra.png",
+      "projects": [
+        {
+          "client": "Tourism Tasmania",
+          "title": "The Off Season",
+          "poster": "directors/kyra_bartley/1. Tourism Tas Still.png",
+          "video": "directors/kyra_bartley/1. TourismTas.mp4"
+        },
+        {
+          "client": "Westfield",
+          "title": "Scissors A-Gliding",
+          "poster": "directors/kyra_bartley/2. Westfield Still.png",
+          "video": "directors/kyra_bartley/2. Westfield_Aunties.mp4"
+        },
+        {
+          "client": "Pirtek",
+          "title": "Drama Resistant",
+          "poster": "directors/kyra_bartley/3. Pirtek Still.png",
+          "video": "directors/kyra_bartley/3. Pirtek_Tug.mp4"
+        },
+        {
+          "client": "Post Finance",
+          "title": "Knowing What Counts",
+          "poster": "directors/kyra_bartley/4. Postfinance Still_v2.png",
+          "video": "directors/kyra_bartley/4. Postfinance.mp4"
+        },
+        {
+          "client": "UNHCR",
+          "title": "The Reluctant Shanty",
+          "poster": "directors/kyra_bartley/5. UNHCR Still.png",
+          "video": "directors/kyra_bartley/5. UNHCR.mp4"
+        },
+        {
+          "client": "Vodafone",
+          "title": "The Smart Network is Here",
+          "poster": "directors/kyra_bartley/6. Vodafone Still.png",
+          "video": "directors/kyra_bartley/6. Vodafone.mp4"
+        },
+        {
+          "client": "Fiji Tourism",
+          "title": "Where Happiness Comes Naturally",
+          "poster": "directors/kyra_bartley/7. FijiTourism Still.png",
+          "video": "directors/kyra_bartley/7. FijiTourism.mp4"
+        },
+        {
+          "client": "Modibodi",
+          "title": "Fear Not",
+          "poster": "directors/kyra_bartley/8. Modibodi Still.png",
+          "video": "directors/kyra_bartley/8. ModiBodi_SharkWeek.mp4"
+        },
+        {
+          "client": "Google",
+          "title": "Helping You Help Them",
+          "poster": "directors/kyra_bartley/9. Google Still.png",
+          "video": "directors/kyra_bartley/9. GoogleAFL.mp4"
+        },
+        {
+          "client": "FRANKiE4",
+          "title": "Brainchild",
+          "poster": "directors/kyra_bartley/10. Frankie4 Still.png",
+          "video": "directors/kyra_bartley/10. Frankie4.mp4"
+        }
+      ]
+    },
+    {
+      "id": "toby_morris",
+      "navId": "toby",
+      "name": "Toby Morris",
+      "logo": "directors/toby_morris/Toby.png",
+      "projects": [
+        {
+          "client": "Singapore Navy",
+          "title": "It's Not Crazy, It's The Navy",
+          "poster": "directors/toby_morris/posters/SingaporeNavy_optimized.jpg",
+          "video": "directors/toby_morris/reel/SingaporeNavy.mp4"
+        },
+        {
+          "client": "Kia",
+          "title": "Movement That Inspires",
+          "poster": "directors/toby_morris/posters/Kia_optimized.jpg",
+          "video": "directors/toby_morris/reel/Kia.mp4"
+        },
+        {
+          "client": "Instant Scratch-its",
+          "title": "Scratchie Time",
+          "poster": "directors/toby_morris/posters/Scratchies_optimized.jpg",
+          "video": "directors/toby_morris/reel/Scratchies.mp4"
+        },
+        {
+          "client": "Praise",
+          "title": "Give It Some Mayo",
+          "poster": "directors/toby_morris/posters/Praise_optimized.jpg",
+          "video": "directors/toby_morris/reel/Praise.mp4"
+        },
+        {
+          "client": "TikTok",
+          "title": "Now You Know",
+          "poster": "directors/toby_morris/posters/TikTok_optimized.jpg",
+          "video": "directors/toby_morris/reel/TikTok.mp4"
+        },
+        {
+          "client": "The Iconic",
+          "title": "Choose Your Look",
+          "poster": "directors/toby_morris/posters/TheIconic_optimized.jpg",
+          "video": "directors/toby_morris/reel/TheIconic.mp4"
+        },
+        {
+          "client": "Short Film",
+          "title": "Space: A Skate Odyssey",
+          "poster": "directors/toby_morris/posters/Space_optimized.jpg",
+          "video": "directors/toby_morris/reel/Space.mp4"
+        }
+      ]
+    }
+  ]
+}

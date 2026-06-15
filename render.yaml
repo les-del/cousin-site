@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: cousin-editable-api
+    runtime: node
+    rootDir: editable
+    buildCommand: npm install
+    startCommand: node server/index.mjs
+    envVars:
+      - key: COUSIN_ADMIN_PASSWORD
+        sync: false
+      - key: COUSIN_ADMIN_NO_AUTH
+        value: "false"
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GITHUB_REPO
+        value: les-del/cousin-site
+      - key: GITHUB_DATA_PATH
+        value: editable/data/directors.json
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        value: ap-southeast-2
+      - key: S3_BUCKET
+        value: cousin-productions
