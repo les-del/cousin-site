@@ -6,7 +6,8 @@
   var productionApi = 'https://cousin-editable-api.onrender.com/api';
 
   window.COUSIN_ADMIN_CONFIG = {
-    dataUrl: '../data/directors.json',
+    draftUrl: '../data/directors.draft.json',
+    publishedUrl: '../data/directors.json',
     apiBase: isLocal ? '/api' : productionApi,
     assetBase: 'https://cousin-productions.s3.ap-southeast-2.amazonaws.com',
     sitePreviewUrl: '../index.html',

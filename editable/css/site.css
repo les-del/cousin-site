@@ -830,4 +830,21 @@
       .row-guide:nth-child(17) { top: calc(1em + 4 * ((100vh - 2em - 1.25em) / 6 + 0.25em)); height: calc((100vh - 2em - 1.25em) / 6); }
       .row-guide:nth-child(18) { top: calc(1em + 5 * ((100vh - 2em - 1.25em) / 6 + 0.25em)); height: calc((100vh - 2em - 1.25em) / 6); }
     }
+
+    .cousin-draft-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000000;
+      padding: 0.45rem 1rem;
+      background: #1e40af;
+      color: #fff;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: center;
+      pointer-events: none;
+    }
   </style>

@@ -9,22 +9,28 @@
       "logo": "directors/ariel_martin/Ariel.png",
       "projects": [
         {
+          "client": "Vodafone",
+          "title": "Double Coverage",
+          "poster": "directors/ariel_martin/posters/Vodafone.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/Vodafone_DoubleCoverage.mp4"
+        },
+        {
           "client": "TOYOTA -",
           "title": "LONG LIVE RECREATION",
           "poster": "directors/ariel_martin/reel/2. RAV4 Still.png",
           "video": "directors/ariel_martin/reel/RAV4_LLR_60v42_DC.mp4"
         },
         {
-          "client": "Vodafone",
-          "title": "Double time",
-          "poster": "directors/ariel_martin/posters/Vodafone.jpg",
-          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/Vodafone_DoubleCoverage.mp4"
-        },
-        {
           "client": "BALTER",
-          "title": "HEKLLLLOOSOSOS",
+          "title": "Beers Do Come True",
           "poster": "directors/ariel_martin/posters/BALTER_BeersDoComeTrue_optimized.jpg",
           "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/BALTER_BeersDoComeTrue.mp4"
+        },
+        {
+          "client": "MAS",
+          "title": "The Overthinker",
+          "poster": "directors/ariel_martin/posters/MAS_TheOverthinkermp4_optimized.jpg",
+          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/MAS_TheOverthinkermp4.mp4"
         },
         {
           "client": "Kia",
@@ -39,14 +45,8 @@
           "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/WAPOLICE-LetsJoinTheForces.mp4"
         },
         {
-          "client": "MAS",
-          "title": "The Overthinker",
-          "poster": "directors/ariel_martin/posters/MAS_TheOverthinkermp4_optimized.jpg",
-          "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/MAS_TheOverthinkermp4.mp4"
-        },
-        {
           "client": "Prime",
-          "title": "BLACH BLACH",
+          "title": "Cricket World Cup",
           "poster": "directors/ariel_martin/posters/Prime_CricketWorldCup_optimized.jpg",
           "video": "https://cousin-productions.s3.ap-southeast-2.amazonaws.com/Prime_CricketWorldCup.mp4"
         },

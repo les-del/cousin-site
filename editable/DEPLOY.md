@@ -1,51 +1,45 @@
-# Deploying Cousin editable (staging)
+# Deploying Cousin CMS (staging)
 
-## Live URLs (after deploy)
+## Client URLs
 
-| | URL |
-|---|---|
-| **Test site** (no password) | https://www.cousin.site/editable/ |
-| **Admin** (password required) | https://www.cousin.site/editable/admin/ |
+| | URL | Password |
+|---|---|---|
+| **CMS panel** | https://www.cousin.site/editable/admin/ | Yes |
+| **Live site** (published) | https://www.cousin.site/editable/ | No |
+| **Draft preview** | Open **Draft site** from inside the CMS | No |
+
+Give clients the **CMS panel** link and password only. They use **Live site** and **Draft site** buttons inside the panel.
 
 ## 1. Push static files to GitHub
 
-From the repo root:
-
 ```bash
-git add editable/
-git commit -m "Add editable staging site and admin"
+git add editable/ render.yaml
+git commit -m "Update Cousin CMS staging"
 git push live main
 ```
 
-GitHub Pages redeploys in ~1 min. The **test site** works immediately (reads `directors.json`).
+GitHub Pages redeploys in ~1–2 minutes.
 
-## 2. Deploy admin API (save + upload)
+## 2. Deploy admin API (login, save, publish, upload)
 
-The admin panel needs a small Node server for login, save, and poster upload. GitHub Pages is static only — deploy the API to [Render](https://render.com) (free tier):
+GitHub Pages is static only. Deploy the API to [Render](https://render.com) (free tier):
 
-1. Connect repo `les-del/cousin-site` to Render
-2. Use the `render.yaml` in the repo root (or create a Web Service: root dir `editable`, start `node server/index.mjs`)
-3. Set environment variables on Render:
-   - `COUSIN_ADMIN_PASSWORD` — admin login password
-   - `GITHUB_TOKEN` — PAT with Contents write on `cousin-site` (so Save pushes JSON to GitHub)
-   - `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` — for poster uploads to S3
-4. Copy your Render URL (e.g. `https://cousin-editable-api.onrender.com`)
-5. Update `editable/admin/config.js` → `productionApi` with your Render URL + `/api`
-6. Push that change to `live main`
+1. Sign in to Render → **New** → **Blueprint** → connect repo `les-del/cousin-site`
+2. Render reads `render.yaml` and creates `cousin-editable-api`
+3. Set these secrets in the Render dashboard:
+   - `COUSIN_ADMIN_PASSWORD` — the password clients use to sign in
+   - `GITHUB_TOKEN` — (optional) PAT with Contents write on `cousin-site` so **Publish** updates GitHub
+   - `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` — (optional) for poster uploads to S3
+4. After deploy, confirm the API URL matches `editable/admin/config.js` → `productionApi` (default: `https://cousin-editable-api.onrender.com/api`)
 
 ## 3. Local dev
 
 ```bash
 cd editable
 cp .env.example .env
-# COUSIN_ADMIN_NO_AUTH=true for password-free local testing
+# COUSIN_ADMIN_NO_AUTH=true  → skip login on localhost
 npm start
 ```
 
 - Site: http://localhost:8787/editable/
-- Admin: http://localhost:8787/editable/admin/ (no login locally)
-
-## Password
-
-- **Test site**: never password-protected
-- **Admin**: password on Render (`COUSIN_ADMIN_PASSWORD`), skipped on localhost when `COUSIN_ADMIN_NO_AUTH=true`
+- Admin: http://localhost:8787/editable/admin/

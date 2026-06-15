@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Cousin — Admin</title>
+  <title>Cousin CMS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 <body>
   <div id="login-screen" class="login-screen hidden">
     <div class="login-card">
-      <h1>Cousin Admin</h1>
+      <h1>Cousin CMS</h1>
       <p class="subtitle">Sign in to edit director reels.</p>
       <form id="login-form">
         <label for="password">Password</label>
@@ -26,18 +26,19 @@
 
   <div id="editor-screen" class="editor-screen hidden">
     <header class="top-bar">
-      <h1>Director reels</h1>
+      <div class="top-bar-brand">
+        <h1>Cousin CMS</h1>
+        <p id="last-updated" class="last-updated"></p>
+      </div>
       <div class="top-bar-actions">
         <span id="status-pill" class="status-pill saved">Saved</span>
-        <button type="button" id="preview-btn" class="secondary">Open test site</button>
+        <a href="#" id="live-site-btn" class="site-btn secondary" target="_blank" rel="noopener">Live site</a>
+        <button type="button" id="preview-btn" class="secondary">Draft site</button>
         <button type="button" id="save-btn" class="secondary" disabled>Save</button>
+        <button type="button" id="publish-btn" disabled>Publish</button>
         <button type="button" id="logout-btn" class="ghost hidden">Sign out</button>
       </div>
     </header>
-    <div class="site-links">
-      <span>Test site:</span>
-      <a href="#" id="site-link" target="cousin-preview">Open preview</a>
-    </div>
 
     <nav id="director-tabs" class="director-tabs" aria-label="Directors"></nav>
 

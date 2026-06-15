@@ -8,6 +8,7 @@ import { handlePosterUpload } from './upload.mjs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '../..');
 const DATA_FILE = path.resolve(__dirname, '../data/directors.json');
+const DRAFT_FILE = path.resolve(__dirname, '../data/directors.draft.json');
 
 const sessions = new Map();
 
@@ -135,9 +136,18 @@ function requireAuth(req, res, config) {
   return true;
 }
 
-async function saveToDisk(data) {
+async function saveToDisk(data, filePath) {
   const content = JSON.stringify(data, null, 2) + '\n';
-  await fs.writeFile(DATA_FILE, content, 'utf8');
+  await fs.writeFile(filePath, content, 'utf8');
+}
+
+async function readJsonFile(filePath) {
+  try {
+    const raw = await fs.readFile(filePath, 'utf8');
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
 }
 
 async function pushToGitHub(data, config) {
@@ -250,6 +260,59 @@ async function handleApi(req, res, url, config) {
     return json(res, 200, { ok: true }, cors);
   }
 
+  if (req.method === 'GET' && url.pathname === '/api/directors/draft') {
+    if (!requireAuth(req, res, config)) return;
+    const data = await readJsonFile(DRAFT_FILE);
+    if (!data) {
+      return json(res, 404, { error: 'No draft' }, cors);
+    }
+    return json(res, 200, data, cors);
+  }
+
+  if (req.method === 'PUT' && url.pathname === '/api/directors/draft') {
+    if (!requireAuth(req, res, config)) return;
+    let data;
+    try {
+      data = JSON.parse(await readBody(req));
+    } catch {
+      return json(res, 400, { error: 'Invalid JSON' }, cors);
+    }
+    if (!data || !Array.isArray(data.directors)) {
+      return json(res, 400, { error: 'Invalid directors data' }, cors);
+    }
+    try {
+      data.updatedAt = new Date().toISOString().slice(0, 10);
+      await saveToDisk(data, DRAFT_FILE);
+      return json(res, 200, { ok: true, saved: 'draft' }, cors);
+    } catch (err) {
+      return json(res, 500, { error: err.message || 'Save failed' }, cors);
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/directors/publish') {
+    if (!requireAuth(req, res, config)) return;
+    let data;
+    try {
+      data = JSON.parse(await readBody(req));
+    } catch {
+      return json(res, 400, { error: 'Invalid JSON' }, cors);
+    }
+    if (!data || !Array.isArray(data.directors)) {
+      return json(res, 400, { error: 'Invalid directors data' }, cors);
+    }
+    try {
+      data.updatedAt = new Date().toISOString().slice(0, 10);
+      data.publishedAt = new Date().toISOString().slice(0, 10);
+      await saveToDisk(data, DRAFT_FILE);
+      await saveToDisk(data, DATA_FILE);
+      const github = await pushToGitHub(data, config);
+      return json(res, 200, Object.assign({ ok: true, published: true }, github), cors);
+    } catch (err) {
+      return json(res, 500, { error: err.message || 'Publish failed' }, cors);
+    }
+  }
+
+  // Legacy endpoint — treat as publish for backwards compatibility
   if (req.method === 'PUT' && url.pathname === '/api/directors') {
     if (!requireAuth(req, res, config)) return;
     let data;
@@ -264,7 +327,8 @@ async function handleApi(req, res, url, config) {
 
     try {
       data.updatedAt = new Date().toISOString().slice(0, 10);
-      await saveToDisk(data);
+      await saveToDisk(data, DRAFT_FILE);
+      await saveToDisk(data, DATA_FILE);
       const github = await pushToGitHub(data, config);
       return json(res, 200, Object.assign({ ok: true }, github), cors);
     } catch (err) {

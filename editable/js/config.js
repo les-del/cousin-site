@@ -7,6 +7,12 @@ window.COUSIN_ASSET_BASE = 'https://cousin-productions.s3.ap-southeast-2.amazona
 // Prefix for same-origin assets when served from a subfolder (e.g. /editable/)
 window.COUSIN_PATH_PREFIX = '../';
 
+var _cousinHost = window.location.hostname;
+window.COUSIN_API_BASE =
+  _cousinHost === 'localhost' || _cousinHost === '127.0.0.1'
+    ? '/api'
+    : 'https://cousin-editable-api.onrender.com/api';
+
 // Director metadata — nav DOM ids must match index.html
 window.COUSIN_DIRECTORS = [
   {
